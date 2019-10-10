@@ -41,7 +41,7 @@ function App() {
         <>
             <Header/>
             {/*<ReclamoForm/>*/}
-            <Reclamos titulo='RECLAMOS' reclamos={RECLAMOS}/>
+            <Reclamos titulo='RECLAMOS'/>
             <Footer/>
         </>
     );

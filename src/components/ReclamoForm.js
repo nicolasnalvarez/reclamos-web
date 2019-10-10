@@ -8,9 +8,10 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import TextField from '@material-ui/core/TextField';
-import Container from "@material-ui/core/Container";
-import Button from "@material-ui/core/Button";
-import {FormGroup} from "@material-ui/core";
+import Container from '@material-ui/core/Container';
+import Button from '@material-ui/core/Button';
+import {FormGroup} from '@material-ui/core';
+import Paper from "@material-ui/core/Paper";
 
 const styles = theme => ({
     root: {
@@ -19,72 +20,95 @@ const styles = theme => ({
         flexDirection: 'column'
     },
     formControl: {
-        margin: theme.spacing.unit,
+        marginTop: 20,
         minWidth: 150
     },
     selectEmpty: {
-        marginTop: theme.spacing.unit * 2
+        marginTop: theme.spacing(2)
     },
-    button: {},
+    button: {
+        marginTop: theme.spacing(2)
+    },
+    formSubcontainer: {
+        padding: theme.spacing(2),
+        marginTop: theme.spacing(2)
+    }
 });
 
 class ReclamoForm extends PureComponent {
-    state = {
-        selected: null,
-        hasError: false
+    static propTypes = {
+        classes: PropTypes.object.isRequired
     };
 
-    handleChange(value) {
-        this.setState({selected: value});
-    }
+    state = {
+        selected: 'Dueño',
+        hasError: false,
+        dni: '',
+        userType: ''
+    };
 
-    handleClick() {
+    handleChange = name => ({ target: {value} }) => {
+        // if (/^[\d]+$/.test(value) || value === '')
+            this.setState({
+                [name]: value
+            });
+    };
+
+    isValidNumber = number => /^[\d]+$/.test(number);
+
+    handleClick = () => {
         this.setState({hasError: false});
         if (!this.state.selected) {
             this.setState({hasError: true});
         }
-    }
+    };
 
     render() {
         const {classes} = this.props;
-        const {selected, hasError} = this.state;
+        const {selected, hasError, dni} = this.state;
         return (
             <Container maxWidth='sm'>
-                <FormGroup className={classes.root} aria-autocomplete='none'>
-                    <FormControl className={classes.formControl} error={hasError}>
-                        <InputLabel htmlFor='userType'>Tipo de usuario</InputLabel>
-                        <Select
-                            name='userType'
-                            value={selected}
-                            onChange={event => this.handleChange(event.target.value)}
-                            input={<Input id='userType'/>}
-                        >
-                            <MenuItem value='duenio'>Dueño</MenuItem>
-                            <MenuItem value='inquilino'>Inquilino</MenuItem>
-                        </Select>
-                        {hasError && <FormHelperText>Campo requerido!</FormHelperText>}
-                    </FormControl>
-                    <FormControl>
-                        <h3>Ingrese su DNI</h3>
-                        <TextField
-                            id='outlined-dense'
-                            label='Titulo'
-                            margin='dense'
-                            variant='outlined'
-                        />
-                    </FormControl>
-                  <Button onClick={this.handleClick} fullWidth={false} variant='contained' color='primary'
-                          size='small' className={classes.button}>
-                    Submit
-                  </Button>
-                </FormGroup>
+                <Paper elevation={4} className={classes.formSubcontainer}>
+                    <form>
+                        <FormGroup className={classes.root} aria-autocomplete='none'>
+                            <FormControl className={classes.formControl} error={hasError}>
+                                <InputLabel htmlFor='userType'>Tipo de usuario</InputLabel>
+                                <Select
+                                    name='userType'
+                                    value={selected}
+                                    onChange={this.handleChange('userType')}
+                                    input={<Input id='userType'/>}
+                                >
+                                    <MenuItem value='duenio'>Dueño</MenuItem>
+                                    <MenuItem value='inquilino'>Inquilino</MenuItem>
+                                </Select>
+                                {hasError && <FormHelperText>Campo requerido!</FormHelperText>}
+                            </FormControl>
+                        </FormGroup>
+                        <FormGroup>
+                            <TextField
+                                id='dni'
+                                label='DNI'
+                                margin='normal'
+                                variant='standard'
+                                helperText='Sólo números, ejemplo: 34531922'
+                                placeholder='Por favor, ingrese su DNI'
+                                className={classes.formControl}
+                                value={dni}
+                                name='dni'
+                                onChange={this.handleChange('dni')}
+                                error={!this.isValidNumber}
+                            />
+                        </FormGroup>
+                    </form>
+                    <Button onClick={this.handleClick} variant='contained' color='primary'
+                            size='small' className={classes.button}>
+                        Buscar reclamo
+                    </Button>
+                </Paper>
             </Container>
         );
     }
 }
-
-ReclamoForm.propTypes = {
-    classes: PropTypes.object.isRequired
-};
 
 export default withStyles(styles)(ReclamoForm);

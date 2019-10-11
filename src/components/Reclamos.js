@@ -40,26 +40,36 @@ class Reclamos extends PureComponent {
     // };
 
     state = {
-        selected: 'Dueño'
+        selected: 'Dueño',
+        reclamos: [],
     };
 
+    componentDidMount() {
+        fetch('http://localhost:8080/reclamos')
+          .then(response => response.json())
+          .then(reclamos => {
+                console.log(reclamos);
+                this.setState({ reclamos })
+          });
+      }
+
     render() {
-        const {titulo, reclamos, classes} = this.props;
-        const {selected} = this.state
+        const {titulo, classes} = this.props;
+        const {reclamos} = this.state
 
         return (
             <Container title='Lista de Reclamos'  maxWidth='lg'>
               <h1>{titulo}</h1>
                 <List style={{border: '1px solid grey'}} className={classes.root}>
                     {
-                        reclamos.map(({id, documento, edificio, unidad, ubicacion, descripcion, estado}) =>
-                            <ListItem alignItems={3} title={'sarasa'}>
+                        reclamos.map(({id, documento, idEdificio, idUnidad, ubicacion, descripcion, estado}) =>
+                            <ListItem key={id} alignItems={3} title={'sarasa'}>
                                 <ListItemAvatar>
                                     <Avatar>
                                         <WorkIcon/>
                                     </Avatar>
                                 </ListItemAvatar>
-                                <ListItemText primary={`${id} - ${edificio}`} secondary={
+                                <ListItemText primary={`${id} - ${idEdificio}`} secondary={
                                     <>
                                         <Typography
                                             component='p'
@@ -68,6 +78,14 @@ class Reclamos extends PureComponent {
                                             color='textPrimary'
                                         >
                                             Estado: {_.startCase(estado)}
+                                        </Typography>
+                                        <Typography
+                                            component='p'
+                                            variant='body2'
+                                            className={classes.inline}
+                                            color='textPrimary'
+                                        >
+                                            Ubicacion: {ubicacion}
                                         </Typography>
                                         {descripcion}
                                     </>

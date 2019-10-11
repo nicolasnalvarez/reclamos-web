@@ -4,6 +4,7 @@ import ReclamoForm from './components/ReclamoForm';
 import Header from "./components/Header";
 import Footer from "./components/Footer"
 import Reclamos from "./components/Reclamos";
+import ReclamoBusqueda from "./components/ReclamoBusqueda";
 
 const RECLAMOS = [
     {
@@ -41,7 +42,8 @@ function App() {
         <>
             <Header/>
             {/*<ReclamoForm/>*/}
-            <Reclamos titulo='RECLAMOS' reclamos={RECLAMOS}/>
+            {/*<Reclamos titulo='RECLAMOS' reclamos={RECLAMOS}/>*/}
+            <ReclamoBusqueda/>
             <Footer/>
         </>
     );

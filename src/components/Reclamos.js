@@ -10,7 +10,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import WorkIcon from '@material-ui/icons/Work';
 import Divider from '@material-ui/core/Divider';
 import Typography from '@material-ui/core/Typography';
-import {Lodash as _} from 'lodash';
+import _ from 'lodash';
 
 const styles = theme => ({
     root: {
@@ -67,7 +67,7 @@ class Reclamos extends PureComponent {
                                             className={classes.inline}
                                             color='textPrimary'
                                         >
-                                            Estado: {estado}
+                                            Estado: {_.startCase(estado)}
                                         </Typography>
                                         {descripcion}
                                     </>

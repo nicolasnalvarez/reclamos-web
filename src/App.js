@@ -5,6 +5,13 @@ import Header from "./components/Header";
 import Footer from "./components/Footer"
 import Reclamos from "./components/Reclamos";
 import ReclamoBusqueda from "./components/ReclamoBusqueda";
+import Login from "./components/Login";
+import {
+    BrowserRouter as Router,
+    Switch,
+    Route,
+    Link
+} from "react-router-dom";
 
 const RECLAMOS = [
     {
@@ -43,7 +50,8 @@ function App() {
             <Header/>
             {/*<ReclamoForm/>*/}
             {/*<Reclamos titulo='RECLAMOS' reclamos={RECLAMOS}/>*/}
-            <ReclamoBusqueda/>
+            {/*<ReclamoBusqueda/>*/}
+            <Login/>
             <Footer/>
         </>
     );

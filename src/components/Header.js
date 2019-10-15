@@ -1,127 +1,12 @@
 import React, {PureComponent} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
-import Typography from "@material-ui/core/Typography";
-import IconButton from "@material-ui/core/IconButton";
-import Button from "@material-ui/core/Button";
-import Menu from '@material-ui/icons/Menu';
-import MenuItem from "@material-ui/core/MenuItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemText from "@material-ui/core/ListItemText";
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import DraftsIcon from '@material-ui/icons/Drafts';
-import SendIcon from '@material-ui/icons/Send';
-import PropTypes from "prop-types";
-import CustomizedMenus from "./CustomizedMenus";
-
-// const menuStyles = makeStyles({
-//     paper: {
-//         border: '1px solid #d3d4d5',
-//     },
-// });
-//
-// const StyledMenu = props => {
-//     const classes = menuStyles()
-//
-//     return (
-//         <Menu
-//             className={classes.paper}
-//             elevation={0}
-//             getContentAnchorEl={null}
-//             anchorOrigin={{
-//                 vertical: 'bottom',
-//                 horizontal: 'center',
-//             }}
-//             transformOrigin={{
-//                 vertical: 'top',
-//                 horizontal: 'center',
-//             }}
-//             {...props}
-//         />
-//     )
-// };
-//
-// const menuItemStyles = makeStyles(theme => ({
-//     root: {
-//         '&:focus': {
-//             backgroundColor: theme.palette.primary.main,
-//             '& .MuiListItemIcon-root, & .MuiListItemText-primary': {
-//                 color: theme.palette.common.white,
-//             },
-//         },
-//     },
-// }));
-//
-// const StyledMenuItem = props => {
-//     const classes = menuItemStyles();
-//
-//     return (
-//         <MenuItem className={classes.root}/>
-//     )
-// };
-//
-// class CustomizedMenus extends PureComponent {
-//     state = {
-//         anchorEl: null,
-//     };
-//
-//     setAnchorEl = val => {
-//         this.setState({anchorEl: val});
-//     };
-//
-//     handleClick = event => {
-//         this.setAnchorEl(event.currentTarget);
-//     };
-//
-//     handleClose = () => {
-//         this.setAnchorEl(null);
-//     };
-//
-//     render () {
-//         const {anchorEl} = this.state;
-//
-//         return (
-//             <div>
-//                 <Button
-//                     aria-controls="customized-menu"
-//                     aria-haspopup="true"
-//                     variant="contained"
-//                     color="primary"
-//                     onClick={this.handleClick}
-//                 >
-//                     Open Menu
-//                 </Button>
-//                 <StyledMenu
-//                     id="customized-menu"
-//                     anchorEl={anchorEl}
-//                     keepMounted
-//                     open={!!anchorEl}
-//                     onClose={this.handleClose}
-//                 >
-//                     <StyledMenuItem>
-//                         <ListItemIcon>
-//                             <SendIcon fontSize="small" />
-//                         </ListItemIcon>
-//                         <ListItemText primary="Sent mail" />
-//                     </StyledMenuItem>
-//                     <StyledMenuItem>
-//                         <ListItemIcon>
-//                             <DraftsIcon fontSize="small" />
-//                         </ListItemIcon>
-//                         <ListItemText primary="Drafts" />
-//                     </StyledMenuItem>
-//                     <StyledMenuItem>
-//                         <ListItemIcon>
-//                             <InboxIcon fontSize="small" />
-//                         </ListItemIcon>
-//                         <ListItemText primary="Inbox" />
-//                     </StyledMenuItem>
-//                 </StyledMenu>
-//             </div>
-//         );
-//     }
-// };
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
+import PropTypes from 'prop-types';
+import CustomizedMenus from './CustomizedMenus';
+import {Link} from "react-router-dom";
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -132,21 +17,32 @@ const useStyles = makeStyles(theme => ({
     },
     title: {
         flexGrow: 1,
+    },
+    link: {
+        textDecoration: 'none',
+        color: 'inherit'
     }
 }));
 
-const Header = props => {
+const Header = ({title, isLoggedIn}) => {
     const classes = useStyles();
+    const menuOptions = isLoggedIn
+        ? [
+            {iconName: 'post_add', text: 'Nuevo Reclamo', subText: 'Aquí podrá generar un nuevo reclamo para su unidad o edificio', pathTo: '/reclamo'},
+            {iconName: 'search', text: 'Buscar Reclamo', subText: 'Podrá buscar uno o varios reclamos según cierto criterio', pathTo: '/busquedareclamos'},
+            {iconName: 'list_alt', text: 'Mis Reclamos', subText: 'La lista de los reclamos que fueron generados por usted', pathTo: '/reclamos'}
+        ]
+        :[{iconName: 'search', text: 'Buscar Reclamo', subText: 'Podrá buscar uno o varios reclamos según cierto criterio', pathTo: '/busquedareclamos'}];
 
     return (
     <div className={classes.root}>
-        <AppBar position="static">
+        <AppBar position='static'>
             <Toolbar>
-                <CustomizedMenus/>
-                <Typography variant="h6" className={classes.title}>
-                    Sistema de generación de reclamos
+                <CustomizedMenus menuOptions={menuOptions}/>
+                <Typography variant='h6' className={classes.title}>
+                    {title}
                 </Typography>
-                <Button color="inherit">Login</Button>
+                <Button color='inherit'><Link className={classes.link} to="/login">Log in</Link></Button>
             </Toolbar>
         </AppBar>
     </div>

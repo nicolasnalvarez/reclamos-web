@@ -5,9 +5,8 @@ import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import DraftsIcon from '@material-ui/icons/Drafts';
-import SendIcon from '@material-ui/icons/Send';
+import Icon from "@material-ui/core/Icon";
+import {Link} from "react-router-dom";
 
 const StyledMenu = withStyles({
     paper: {
@@ -37,10 +36,27 @@ const StyledMenuItem = withStyles(theme => ({
                 color: theme.palette.common.white,
             },
         },
+        maxHeight: '76px',
+        width: '250px',
+        display: 'flex'
     },
 }))(MenuItem);
 
-export default function CustomizedMenus() {
+export default function CustomizedMenus({menuOptions}) {
+    // const renderLink = to => React.useMemo(
+    //     () =>
+    //         React.forwardRef((itemProps, ref) => (
+    //             // With react-router-dom@^6.0.0 use `ref` instead of `innerRef`
+    //             // See https://github.com/ReactTraining/react-router/issues/6056
+    //             <Link to={to} {...itemProps} ref={ref} />
+    //         )),
+    //     [to],
+    // );
+
+    const renderLink = to => {
+        return <Link to={to}/>
+    };
+
     const [anchorEl, setAnchorEl] = React.useState(null);
 
     const handleClick = event => {
@@ -57,10 +73,10 @@ export default function CustomizedMenus() {
                 aria-controls="customized-menu"
                 aria-haspopup="true"
                 variant="contained"
-                color="primary"
+                style={{opacity: '0.7', backgroundColor: 'black', color: '#fff', marginRight: '10px', width: '160px'}}
                 onClick={handleClick}
             >
-                Open Menu
+                <span style={{opacity: '1'}}>Menu</span>
             </Button>
             <StyledMenu
                 id="customized-menu"
@@ -69,24 +85,27 @@ export default function CustomizedMenus() {
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
             >
-                <StyledMenuItem>
-                    <ListItemIcon>
-                        <SendIcon fontSize="small" />
-                    </ListItemIcon>
-                    <ListItemText primary="Sent mail" />
-                </StyledMenuItem>
-                <StyledMenuItem>
-                    <ListItemIcon>
-                        <DraftsIcon fontSize="small" />
-                    </ListItemIcon>
-                    <ListItemText primary="Drafts" />
-                </StyledMenuItem>
-                <StyledMenuItem>
-                    <ListItemIcon>
-                        <InboxIcon fontSize="small" />
-                    </ListItemIcon>
-                    <ListItemText primary="Inbox" />
-                </StyledMenuItem>
+            {
+                menuOptions.map(menuOption =>
+                    <StyledMenuItem
+                        key={menuOption.iconName}
+                        component={
+                            React.forwardRef((itemProps, ref) => (
+                                        <Link to={menuOption.pathTo} {...itemProps} ref={ref} />
+                                    ))
+                        }
+                        style={{whiteSpace: 'normal'}}
+                    >
+                        <ListItemIcon>
+                            <Icon>{menuOption.iconName}</Icon>
+                        </ListItemIcon>
+                        <ListItemText
+                            primaryTypographyProps={{variant: 'subtitle2'}}
+                            primary={menuOption.text}
+                        />
+                    </StyledMenuItem>
+                )
+            }
             </StyledMenu>
         </div>
     );

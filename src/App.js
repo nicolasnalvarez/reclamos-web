@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import './App.css';
 import ReclamoForm from './components/ReclamoForm';
 import Header from "./components/Header";
@@ -6,12 +6,8 @@ import Footer from "./components/Footer"
 import Reclamos from "./components/Reclamos";
 import ReclamoBusqueda from "./components/ReclamoBusqueda";
 import Login from "./components/Login";
-import {
-    BrowserRouter as Router,
-    Switch,
-    Route,
-    Link
-} from "react-router-dom";
+import {BrowserRouter, Link, Route, Switch} from "react-router-dom";
+import SignUp from "./components/SignUp";
 
 const RECLAMOS = [
     {
@@ -45,16 +41,48 @@ const RECLAMOS = [
 //nuevo, abierto, enProceso, desestimado, anulado, terminado
 
 function App() {
+    const [isLoggedIn, logIn] = useState(false);
+
     return (
-        <>
-            <Header/>
-            {/*<ReclamoForm/>*/}
-            {/*<Reclamos titulo='RECLAMOS' reclamos={RECLAMOS}/>*/}
-            {/*<ReclamoBusqueda/>*/}
-            <Login/>
-            <Footer/>
-        </>
+        <BrowserRouter>
+            <>
+                <Header isLoggedIn={isLoggedIn} title='Sistema de gestión de reclamos'/>
+                <Switch>
+                    <Route path="/reclamo">
+                        <ReclamoForm/>
+                    </Route>
+                    <Route path="/reclamos">
+                        <Reclamos titulo='RECLAMOS' reclamos={RECLAMOS}/>
+                    </Route>
+                    <Route path="/busquedareclamos">
+                        <ReclamoBusqueda/>
+                    </Route>
+                    <Route path="/registro">
+                        <SignUp/>
+                    </Route>
+                    <Route path="/login">
+                        <Login/>
+                    </Route>
+                    <Route path="/">
+                        <Home />
+                    </Route>
+                    <Footer/>
+                </Switch>
+            </>
+        </BrowserRouter>
     );
 }
 
 export default App;
+
+function Home() {
+    return <h2>Home</h2>;
+}
+
+function About() {
+    return <h2>About</h2>;
+}
+
+function Users() {
+    return <h2>Users</h2>;
+}

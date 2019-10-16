@@ -1,13 +1,14 @@
 import React, {useState} from 'react';
+
 import './App.css';
 import ReclamoForm from './components/ReclamoForm';
-import Header from "./components/Header";
-import Footer from "./components/Footer"
-import Reclamos from "./components/Reclamos";
-import ReclamoBusqueda from "./components/ReclamoBusqueda";
-import Login from "./components/Login";
-import {BrowserRouter, Link, Route, Switch} from "react-router-dom";
-import SignUp from "./components/SignUp";
+import Header from './components/Header';
+import Footer from './components/Footer'
+import Reclamos from './components/Reclamos';
+import ReclamoBusqueda from './components/ReclamoBusqueda';
+import Login from './components/Login';
+import {BrowserRouter, Route, Switch} from 'react-router-dom';
+import SignUp from './components/SignUp';
 
 const RECLAMOS = [
     {
@@ -15,7 +16,7 @@ const RECLAMOS = [
         documento: '30192158',
         edificio: 'Torre Alem',
         unidad: 'Dpto. 2C',
-        ubicacion: "Lenadro N. Alem 1991, CABA",
+        ubicacion: 'Lenadro N. Alem 1991, CABA',
         descripcion: 'Descripción del reclamo 1',
         estado: 'desestimado'
     },
@@ -24,7 +25,7 @@ const RECLAMOS = [
         documento: '35221036',
         edificio: 'Las margaritas',
         unidad: 'Dpto. 5A',
-        ubicacion: "Holmberg 292, CABA",
+        ubicacion: 'Holmberg 292, CABA',
         descripcion: 'Descripción del reclamo 2 más o menos larga, ni muy corta ni super larga, algo intermedio digamos',
         estado: 'nuevo'
     },
@@ -33,7 +34,7 @@ const RECLAMOS = [
         documento: '40019302',
         edificio: 'Los Sauces',
         unidad: 'Dpto. 12D',
-        ubicacion: "Griveo 2030, CABA",
+        ubicacion: 'Griveo 2030, CABA',
         descripcion: 'Descripción del reclamo 3 recontra super mega archi larga con un montón de cosas adentro para ver como se ve acá, porque si se ve feo o rompe cagamos fuego',
         estado: 'enProceso'
     }
@@ -48,26 +49,26 @@ function App() {
             <>
                 <Header isLoggedIn={isLoggedIn} title='Sistema de gestión de reclamos'/>
                 <Switch>
-                    <Route path="/reclamo">
+                    <Route path='/reclamo'>
                         <ReclamoForm/>
                     </Route>
-                    <Route path="/reclamos">
+                    <Route path='/reclamos'>
                         <Reclamos titulo='RECLAMOS' reclamos={RECLAMOS}/>
                     </Route>
-                    <Route path="/busquedareclamos">
+                    <Route path='/busquedareclamos'>
                         <ReclamoBusqueda/>
                     </Route>
-                    <Route path="/registro">
+                    <Route path='/registro'>
                         <SignUp/>
                     </Route>
-                    <Route path="/login">
+                    <Route path='/login'>
                         <Login/>
                     </Route>
-                    <Route path="/">
+                    <Route path='/'>
                         <Home />
                     </Route>
-                    <Footer/>
                 </Switch>
+                <Footer/>
             </>
         </BrowserRouter>
     );

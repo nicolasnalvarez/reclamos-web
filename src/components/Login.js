@@ -5,9 +5,8 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
-import Link from '@material-ui/core/Link';
+import {Link} from 'react-router-dom';
 import Grid from '@material-ui/core/Grid';
-import Box from '@material-ui/core/Box';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
@@ -15,9 +14,9 @@ import Container from '@material-ui/core/Container';
 
 function Copyright() {
     return (
-        <Typography variant="body2" color="textSecondary" align="center">
+        <Typography variant='body2' color='textSecondary' align='center'>
             {'Copyright © '}
-            <Link color="inherit" href="https://material-ui.com/">
+            <Link color='inherit' href='https://material-ui.com/'>
                 Your Website
             </Link>{' '}
             {new Date().getFullYear()}
@@ -54,69 +53,71 @@ const useStyles = makeStyles(theme => ({
 export default function Login() {
     const classes = useStyles();
 
+    const login = () => {
+
+    };
+
     return (
-        <Container component="main" maxWidth="xs">
+        <Container component='main' maxWidth='xs'>
             <CssBaseline />
             <div className={classes.paper}>
                 <Avatar className={classes.avatar}>
                     <LockOutlinedIcon />
                 </Avatar>
-                <Typography component="h1" variant="h5">
+                <Typography component='h1' variant='h5'>
                     Log in
                 </Typography>
                 <form className={classes.form} noValidate>
                     <TextField
-                        variant="outlined"
-                        margin="normal"
+                        variant='outlined'
+                        margin='normal'
                         required
                         fullWidth
-                        id="email"
-                        label="Email Address"
-                        name="email"
-                        autoComplete="email"
+                        id='email'
+                        label='Dirección de email'
+                        name='email'
+                        autoComplete='email'
                         autoFocus
                     />
                     <TextField
-                        variant="outlined"
-                        margin="normal"
+                        variant='outlined'
+                        margin='normal'
                         required
                         fullWidth
-                        name="password"
-                        label="Password"
-                        type="password"
-                        id="password"
-                        autoComplete="current-password"
+                        name='password'
+                        label='Contraseña'
+                        type='password'
+                        id='password'
+                        autoComplete='current-password'
                     />
                     <FormControlLabel
-                        control={<Checkbox value="remember" color="primary" />}
-                        label="Remember me"
+                        control={<Checkbox value='remember' color='primary' />}
+                        label='Recordarme'
                     />
                     <Button
-                        type="submit"
+                        type='submit'
                         fullWidth
-                        variant="contained"
-                        color="primary"
+                        variant='contained'
+                        color='primary'
                         className={classes.submit}
+                        onClick={login}
                     >
-                        Sign In
+                        Loguearse
                     </Button>
                     <Grid container>
                         <Grid item xs>
-                            <Link href="#" variant="body2">
+                            <Link href='#' variant='body2'>
                                 Forgot password?
                             </Link>
                         </Grid>
                         <Grid item>
-                            <Link href="#" variant="body2">
-                                {"Don't have an account? Sign Up"}
+                            <Link to='/registro' variant='body2'>
+                                No tienes una cuenta? Registrate
                             </Link>
                         </Grid>
                     </Grid>
                 </form>
             </div>
-            <Box mt={8}>
-                <Copyright />
-            </Box>
         </Container>
     );
 }

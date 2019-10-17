@@ -58,7 +58,8 @@ class ReclamoForm extends PureComponent {
             edificioSelected: '',
             unidadSelected: '',
             comentario: '',
-            ubicacion: ''
+            ubicacion: '',
+            imagenes: []
         }
     };
 
@@ -112,7 +113,6 @@ class ReclamoForm extends PureComponent {
             const dni = currentUser.dni;
         }
 
-
         // fetch(`localhost:8080/unidades/personas/${tipoUsuario}/${dni}/edificios/${this.state.edificioSelected.id}`,
         //     {
         //         method: 'GET',
@@ -149,6 +149,27 @@ class ReclamoForm extends PureComponent {
             onChangeValue(value);
     };
 
+    onUploadImage = event => {
+        console.log('image event', event);
+
+        if (event.target && event.target.files) {
+            this.setState({
+                formValues: {
+                    ...this.state.formValues,
+                    imagenes: [
+                        ...this.state.formValues.imagenes,
+                        [
+                            {
+                                path: `C:\\imagenes\\${event.target.files[0].name}`,
+                                tipo: event.target.files[0].type
+                            }
+                        ]
+                    ]
+                }
+            });
+        }
+    };
+
     isValidNumber = number => /^[\d]+$/.test(number);
 
     handleClick = () => {
@@ -158,20 +179,57 @@ class ReclamoForm extends PureComponent {
         }
     };
 
+    altaReclamo = () =>  {
+        const currentUser = this.props.currentUser;
+        const formValues = this.state.formValues;
+
+        const tipoUsuario = 1;
+        const dni = '35255211';
+        if (currentUser && currentUser.dni) {
+            const tipoUsuario = currentUser.tipoUsuario;
+            const dni = currentUser.dni;
+        }
+
+        // event.preventDefault();
+        const newReclamo = {
+            idEdificio: formValues.edificioSelected,
+            idUnidad: formValues.unidadSelected,
+            ubicacion: formValues.ubicacion,
+            descripcion: formValues.comentario,
+            documento: dni,
+            imagenes: formValues.imagenes
+        };
+
+        fetch('http://localhost:8080/reclamos',
+            {
+                method: 'POST',
+                body: JSON.stringify(newReclamo),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(cleanResponse => {
+
+            })
+            .catch(error => console.error('Error:', error));
+    };
+
     render() {
         const {classes} = this.props;
         const {formValues, hasError, edificios, unidades} = this.state;
+
+        // Buscar una mejor manera
+        const canSubmit = formValues.edificioSelected && formValues.unidadSelected && formValues.comentario;
+
         return (
             <Container component='main' maxWidth='xs'>
                 <CssBaseline/>
                 <div className={classes.paper}>
-                    {/*<Avatar className={classes.avatar}>*/}
-                    {/*    <LockOutlinedIcon />*/}
-                    {/*</Avatar>*/}
                     <Typography component='h1' variant='h5'>
                         Aquí puede generar un nuevo reclamo
                     </Typography>
-                    <form className={classes.form}>
+                    <form className={classes.form} onSubmit={() => {return false;}}>
                         <Grid container spacing={2}>
                             <Grid item xs={12} sm={6}>
                                 {/*<FormGroup className={classes.root} aria-autocomplete='none'>*/}
@@ -239,11 +297,14 @@ class ReclamoForm extends PureComponent {
                                             </MenuItem>
                                         )
                                     ))}
+                                    {
+                                        unidades.length <= 0 && []
+                                    }
                                 </TextField>
                             </Grid>
                             {
                                 formValues.unidadSelected === '0' &&
-                                <Grid item xs={12}>
+                                <Grid style={{marginTop: '5px'}} item xs={12}>
                                     <TextField
                                         id='ubicacion'
                                         label='Ubicación del hecho'
@@ -274,17 +335,19 @@ class ReclamoForm extends PureComponent {
                                 />
                             </Grid>
                             <Grid item xs={12}>
-                                <input className='inputfile' id='file' type='file' name='file'/>
-                                <label htmlFor="file">Choose a file</label>
+                                <input onChange={this.onUploadImage} className='inputfile' id='file' type='file' name='file'/>
+                                <label htmlFor='file'> Subir una imagen </label>
+                                {formValues.imagenes && formValues.imagenes.length > 0 && <span style={{marginLeft: '5px', color: 'green'}}>Imagen cargada!</span>}
                             </Grid>
                         </Grid>
                     </form>
                     <Button
-                        onClick={this.handleClick}
+                        onClick={this.altaReclamo}
                         type='submit'
                         fullWidth
                         variant='contained'
                         color='primary'
+                        disabled={!canSubmit}
                         className={classes.submit}
                     >
                             Generar reclamo

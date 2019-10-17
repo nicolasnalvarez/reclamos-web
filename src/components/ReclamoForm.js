@@ -158,20 +158,59 @@ class ReclamoForm extends PureComponent {
         }
     };
 
+    altaReclamo  = () =>  {
+        const currentUser = this.props.currentUser;
+        const formValues = this.state.formValues;
+
+        if (!currentUser) {
+            const tipoUsuario = 1;
+            const dni = '35255211';
+        } else {
+            const tipoUsuario = currentUser.tipoUsuario;
+            const dni = currentUser.dni;
+        }
+
+        // event.preventDefault();
+        const newReclamo = {
+            idEdificio: formValues.edificioSelected,
+            idUnidad: formValues.unidadSelected,
+            ubicacion: formValues.ubicacion,
+            descripcion: formValues.comentario,
+            documento: dni
+        };
+
+        fetch('http://localhost:8080/auth/register',
+            {
+                method: 'POST',
+                body: JSON.stringify(newUser),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(cleanResponse => {
+                if (cleanResponse.status === 201) {
+                    registerUser();
+                }
+            })
+            .catch(error => console.error('Error:', error));
+    };
+
     render() {
         const {classes} = this.props;
         const {formValues, hasError, edificios, unidades} = this.state;
+
+        // Buscar una mejor manera
+        const canSubmit = formValues.edificioSelected && formValues.unidadSelected && formValues.comentario;
+
         return (
             <Container component='main' maxWidth='xs'>
                 <CssBaseline/>
                 <div className={classes.paper}>
-                    {/*<Avatar className={classes.avatar}>*/}
-                    {/*    <LockOutlinedIcon />*/}
-                    {/*</Avatar>*/}
                     <Typography component='h1' variant='h5'>
                         Aquí puede generar un nuevo reclamo
                     </Typography>
-                    <form className={classes.form}>
+                    <form className={classes.form} onSubmit={() => {return false;}}>
                         <Grid container spacing={2}>
                             <Grid item xs={12} sm={6}>
                                 {/*<FormGroup className={classes.root} aria-autocomplete='none'>*/}
@@ -239,6 +278,9 @@ class ReclamoForm extends PureComponent {
                                             </MenuItem>
                                         )
                                     ))}
+                                    {
+                                        unidades.length <= 0 && []
+                                    }
                                 </TextField>
                             </Grid>
                             {
@@ -280,11 +322,12 @@ class ReclamoForm extends PureComponent {
                         </Grid>
                     </form>
                     <Button
-                        onClick={this.handleClick}
+                        onClick={this.altaReclamo}
                         type='submit'
                         fullWidth
                         variant='contained'
                         color='primary'
+                        disabled={!canSubmit}
                         className={classes.submit}
                     >
                             Generar reclamo

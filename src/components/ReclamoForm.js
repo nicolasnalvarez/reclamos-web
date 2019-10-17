@@ -31,7 +31,9 @@ const styles = theme => ({
     },
     formSubcontainer: {
         padding: theme.spacing(2),
-        marginTop: theme.spacing(2)
+        marginTop: theme.spacing(2),
+        minWidth: 450,
+        minHeight: 300
     }
 });
 
@@ -66,6 +68,11 @@ class ReclamoForm extends PureComponent {
         //         }
         //     })
         //     .catch(error => console.error('Error:', error));
+        this.setState({edificios: [
+                {id: '5', nombre: 'Edificio Salamandra', direccion: 'Junin 233'},
+                {id: '6', nombre: 'Edificio Las Salinas', direccion: 'Chile 2040'}
+            ]
+        });
     }
 
     onChangeEdificio = edificioSelected => {
@@ -105,22 +112,24 @@ class ReclamoForm extends PureComponent {
 
     render() {
         const {classes} = this.props;
-        const {selected, hasError} = this.state;
+        const {selected, hasError, edificios, unidades} = this.state;
         return (
-            <Container component='main' maxWidth='sm'>
+            <Container component='main' maxWidth='lg'>
                 <Paper elevation={4} className={classes.formSubcontainer}>
                     <form>
                         <FormGroup className={classes.root} aria-autocomplete='none'>
                             <FormControl className={classes.formControl} error={hasError}>
-                                <InputLabel htmlFor='userType'>Tipo de usuario</InputLabel>
+                                <InputLabel htmlFor='edificios'>Edificios</InputLabel>
                                 <Select
-                                    name='userType'
+                                    name='edificios'
+                                    id='edificios'
                                     value={selected}
                                     onChange={this.handleChange('userType')}
                                     input={<Input id='userType'/>}
                                 >
-                                    <MenuItem value='duenio'>Dueño</MenuItem>
-                                    <MenuItem value='inquilino'>Inquilino</MenuItem>
+                                {
+                                    edificios.map(edificio => <MenuItem key={edificio.id} value='duenio'>{edificio.nombre}</MenuItem>)
+                                }
                                 </Select>
                                 {hasError && <FormHelperText>Campo requerido!</FormHelperText>}
                             </FormControl>

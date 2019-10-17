@@ -7,6 +7,7 @@ import Button from '@material-ui/core/Button';
 import PropTypes from 'prop-types';
 import CustomizedMenus from './CustomizedMenus';
 import {Link, withRouter} from "react-router-dom";
+import Icon from "@material-ui/core/Icon";
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -26,7 +27,7 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-const Header = ({title, isLoggedIn, history}) => {
+const Header = ({title, isLoggedIn, history, onUserLogOut}) => {
     const classes = useStyles();
     const menuOptions = isLoggedIn
         ? [
@@ -40,6 +41,14 @@ const Header = ({title, isLoggedIn, history}) => {
         history.push('/');
     };
 
+    const checkLogOut = () => {
+        if (isLoggedIn) {
+            // event.preventDefault();
+            history.push('/home');
+            onUserLogOut();
+        }
+    };
+
     return (
         <AppBar component='header' position='static' className={classes.root}>
             <Toolbar>
@@ -47,7 +56,11 @@ const Header = ({title, isLoggedIn, history}) => {
                     {title}
                 </Typography>
                 <CustomizedMenus menuOptions={menuOptions}/>
-                <Button color='inherit'><Link className={classes.link} to="/login">Log in</Link></Button>
+                <Button onClick={checkLogOut} color='inherit'>
+                    {!isLoggedIn && <Link className={classes.link} to="/login">Log in</Link>}
+                    {isLoggedIn && <span>Log out</span>}
+                    <Icon style={{marginLeft: '3px'}}>{isLoggedIn? 'exit_to_app':'open_in_browser'}</Icon>
+                </Button>
             </Toolbar>
         </AppBar>
 )};

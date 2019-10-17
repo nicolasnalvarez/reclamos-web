@@ -1,12 +1,11 @@
 import React from 'react';
 import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
-import {Container} from "@material-ui/core";
 
 function Copyright() {
     return (
         <Typography style={{color: 'white'}} variant="body2" color="textPrimary" align="center">
-            {`Copyright © Your Website ${new Date().getFullYear()}.`}
+            {`Aplicaciones Distribuidas - 2° Cuatrimestre - Año ${new Date().getFullYear()}`}
         </Typography>
     );
 }

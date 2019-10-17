@@ -40,7 +40,7 @@ const useStyles = makeStyles(theme => ({
 
 export default withRouter(function Login({onUserLogin, history}) {
     const classes = useStyles();
-    const [usuario, setUsuario] = useState('');
+    const [nombre, setNombre] = useState('');
     const [password, setPassword] = useState('');
     const [saveCookies, setSaveCookies] = useState(false);
 
@@ -49,7 +49,7 @@ export default withRouter(function Login({onUserLogin, history}) {
     const login = event => {
         event.preventDefault();
         history.push('/home');
-        onUserLogin({usuario, password}, saveCookies);
+        onUserLogin({nombre, password}, saveCookies);
     };
 
     const saveSessionCookies = rememberMe => {
@@ -75,10 +75,10 @@ export default withRouter(function Login({onUserLogin, history}) {
                         required
                         fullWidth
                         id='nombre'
-                        label='Usuario'
+                        label='Nombre'
                         name='nombre'
-                        autoComplete='usuario'
-                        onChange={handleChange(setUsuario)}
+                        autoComplete='nombre'
+                        onChange={handleChange(setNombre)}
                         autoFocus
                     />
                     <TextField

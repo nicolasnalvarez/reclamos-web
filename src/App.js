@@ -62,7 +62,7 @@ const fakeUser = {
 
 function App({history}) {
     const [session, setSession] = useState(getSessionCookie());
-    const [isLoggedIn, setLoggedIn] = useState(!!session.email);
+    const [isLoggedIn, setLoggedIn] = useState(!!session.nombre);
 
     const [currentUser, setCurrentUser] = useState(null);
     // useEffect(
@@ -74,8 +74,8 @@ function App({history}) {
 
     // Funciona como el componentDidMount()
     useEffect(() => {
-        if (session.usuario)
-            setCurrentUser(fakeUser);
+        if (session.nombre)
+            setCurrentUser(session);
     });
 
     const registerUser = () => {
@@ -86,28 +86,29 @@ function App({history}) {
         if (rememberMe)
             setSessionCookie({usuario: fakeUser.usuario, email: fakeUser.email, dni: fakeUser.dni, tipoUsuario: 1});
 
-        setLoggedIn(true);
-        setCurrentUser(fakeUser);
+        // setLoggedIn(true);
+        // setCurrentUser(fakeUser);
 
         // CON SERVER DESCOMENTAR LO SIGUIENTE:
-        // fetch('http://localhost:8080/auth/login',
-        //     {
-        //         method: 'POST',
-        //         body: JSON.stringify(loginData),
-        //         headers: {
-        //             'Content-Type': 'application/json'
-        //         }
-        //     })
-        //     .then(response => response.json())
-        //     .then(cleanResponse => {
-        //         if (cleanResponse.status === 200) {
-        //             setLoggedIn(true);
-        //             setCurrentUser(cleanResponse.body);
-        //             if (rememberMe)
-        //                 setSessionCookie(cleanResponse.body);
-        //         }
-        //     })
-        //     .catch(error => console.error('Error:', error));
+        fetch('http://localhost:8080/auth/login',
+            {
+                method: 'POST',
+                body: JSON.stringify(loginData),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => {
+                setLoggedIn(true);
+                return response.json();
+            })
+            .then(cleanResponse => {
+                setCurrentUser(cleanResponse);
+                console.log(cleanResponse);
+                // if (rememberMe)
+                    setSessionCookie(cleanResponse);
+            })
+            .catch(error => console.error('Error:', error));
     };
 
     const onUserLogOut = () => {

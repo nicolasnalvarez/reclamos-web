@@ -39,8 +39,8 @@ const Reclamo = ({dataReclamo}) => {
                 <Typography className={classes.title} color="textSecondary" gutterBottom>
                     <strong>Edificio:</strong> {dataReclamo.idEdificio}
                 </Typography>
-                <Typography variant="h5" component="h2">
-                    ID: {dataReclamo.id}
+                <Typography className={classes.title} color="textSecondary" gutterBottom>
+                    <strong>Unidad:</strong> {dataReclamo.idUnidad}
                 </Typography>
                 <Typography style={{color: 'blue'}} className={classes.pos} color="textSecondary">
                     <strong>Estado: </strong>{_.startCase(dataReclamo.estado)}

@@ -5,12 +5,9 @@ import Container from '@material-ui/core/Container';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
-import Avatar from '@material-ui/core/Avatar';
-import ListItemText from '@material-ui/core/ListItemText';
-import WorkIcon from '@material-ui/icons/Work';
 import Divider from '@material-ui/core/Divider';
 import Typography from '@material-ui/core/Typography';
-import _ from 'lodash';
+import Reclamo from "./Reclamo";
 
 const styles = theme => ({
     root: {
@@ -31,7 +28,13 @@ const styles = theme => ({
     formSubcontainer: {
         padding: theme.spacing(2),
         marginTop: theme.spacing(2)
-    }
+    },
+    paper: {
+        margin: theme.spacing(4, 0, 4, 0),
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+    },
 });
 
 class Reclamos extends PureComponent {
@@ -46,6 +49,7 @@ class Reclamos extends PureComponent {
 
     componentDidMount() {
         //fetch('http://localhost:8080/reclamos/all/'+this.props.currentUser.dni)
+        // NICO DESCOMENTA ESTO
         fetch('http://localhost:8080/reclamos/all/DNI31522903')
           .then(response => response.json())
           .then(reclamos => {
@@ -54,6 +58,7 @@ class Reclamos extends PureComponent {
           });
 
         // Solo para probar, no debería recibir reclamos como prop sino usando el response del fetch
+        // NICO COMENTA ESTO
         // this.setState({ reclamos: this.props.reclamos })
       }
 
@@ -63,42 +68,47 @@ class Reclamos extends PureComponent {
 
         return (
             <Container className='topContent' component='main' title='Lista de Reclamos' maxWidth='lg'>
-              <h2>{titulo}</h2>
-                <List style={{border: '1px solid grey'}} className={classes.root}>
-                    {
-                        reclamos.map(({id, documento, idEdificio, idUnidad, ubicacion, descripcion, estado}) =>
-                            <ListItem key={id} alignItems={3} title={'sarasa'}>
-                                <ListItemAvatar>
-                                    <Avatar>
-                                        <WorkIcon/>
-                                    </Avatar>
-                                </ListItemAvatar>
-                                <ListItemText primary={`${id} - ${idEdificio}`} secondary={
-                                    <>
-                                        <Typography
-                                            component='p'
-                                            variant='body2'
-                                            className={classes.inline}
-                                            color='textPrimary'
-                                        >
-                                            Estado: {_.startCase(estado)}
-                                        </Typography>
-                                        <Typography
-                                            component='p'
-                                            variant='body2'
-                                            className={classes.inline}
-                                            color='textPrimary'
-                                        >
-                                            Ubicacion: {ubicacion}
-                                        </Typography>
-                                        {descripcion}
-                                    </>
-                                } />
-                                <Divider variant='inset' component='li' />
-                            </ListItem>
-                        )
-                    }
-                </List>
+                <div className={classes.paper}>
+                    <Typography alignCenter component='h1' variant='h5'>
+                        {titulo}
+                    </Typography>
+                    <List dense className={classes.root}>
+                        {
+                            reclamos.map(({id, documento, idEdificio, idUnidad, ubicacion, descripcion, estado}) =>
+                                <ListItem key={id} alignItems={6} title='Reclamos'>
+                                    {/*<ListItemAvatar>*/}
+                                    {/*    <Avatar>*/}
+                                    {/*        <WorkIcon/>*/}
+                                    {/*    </Avatar>*/}
+                                    {/*</ListItemAvatar>*/}
+                                    {/*<ListItemText primary={`${id} - ${idEdificio}`} secondary={*/}
+                                    {/*    <>*/}
+                                    {/*        <Typography*/}
+                                    {/*            component='p'*/}
+                                    {/*            variant='body2'*/}
+                                    {/*            className={classes.inline}*/}
+                                    {/*            color='textPrimary'*/}
+                                    {/*        >*/}
+                                    {/*            Estado: {_.startCase(estado)}*/}
+                                    {/*        </Typography>*/}
+                                    {/*        <Typography*/}
+                                    {/*            component='p'*/}
+                                    {/*            variant='body2'*/}
+                                    {/*            className={classes.inline}*/}
+                                    {/*            color='textPrimary'*/}
+                                    {/*        >*/}
+                                    {/*            Ubicacion: {ubicacion}*/}
+                                    {/*        </Typography>*/}
+                                    {/*        {descripcion}*/}
+                                    {/*    </>*/}
+                                    {/*} />*/}
+                                    <Reclamo cardWidth={600} raised={true} dataReclamo={{id, documento, idEdificio, idUnidad, ubicacion, descripcion, estado}}/>
+                                    <Divider variant='inset' component='li' />
+                                </ListItem>
+                            )
+                        }
+                    </List>
+                </div>
             </Container>
         );
     }

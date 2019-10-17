@@ -24,7 +24,7 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-const Reclamo = ({dataReclamo}) => {
+const Reclamo = ({dataReclamo, raised = false, cardWidth}) => {
     const classes = useStyles();
     console.log('dataReclamo:   ', dataReclamo)
     const isEmptyOrNull =  !dataReclamo || Object.keys(dataReclamo).size === 0;
@@ -34,7 +34,7 @@ const Reclamo = ({dataReclamo}) => {
     };
 
     return (
-        <Card className={classes.card}>
+        <Card raised={raised} style={{width: cardWidth? `${cardWidth}px` : 'inherit'}} className={classes.card}>
             <CardContent>
                 <Typography className={classes.title} color="textSecondary" gutterBottom>
                     <strong>Edificio:</strong> {dataReclamo.idEdificio}

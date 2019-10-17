@@ -61,12 +61,15 @@ function App({history}) {
     //     },
     //     [session]
     // );
+    useEffect(() => {
+        // Funciona como el componentDidMount()
+    });
 
     const registerUser = () => {
         history.push('/login');
     };
 
-    const onUserLogin = loginData => {
+    const onUserLogin = (loginData, rememberMe) => {
         const fakeUser = {
             firstName: 'dario',
             lastName: 'test',
@@ -75,6 +78,9 @@ function App({history}) {
             password: 'pass',
             tipoUsuario: 1
         };
+
+        if (rememberMe)
+            setSessionCookie({email: fakeUser.email, dni: fakeUser.dni, tipoUsuario: 1});
 
         // fetch('http://localhost:8080/login',
         //     {
@@ -107,7 +113,8 @@ function App({history}) {
     // TODO: sumar más validaciones en formularios
     // TODO: menú con submenú por búsqueda de reclamos con diferentes criterios
     // TODO: agregar perfil del usuario y pantalla de administrador
-    // TODO: hashear password para la cookie o generar un JWT
+    // TODO: hashear password para la cookie o generar un JWT o no guardar la password directamente
+    // TODO: cambiar menú por un ícono de hamburguesa
 
     return (
         <SessionContext.Provider value={session}>

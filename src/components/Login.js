@@ -38,7 +38,7 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export default withRouter(function Login({onUserLogin, history, setSessionCookie}) {
+export default withRouter(function Login({onUserLogin, history}) {
     const classes = useStyles();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -49,9 +49,7 @@ export default withRouter(function Login({onUserLogin, history, setSessionCookie
     const login = event => {
         event.preventDefault();
         history.push('/home');
-        if (saveCookies)
-            setSessionCookie({email});
-        onUserLogin({email, password});
+        onUserLogin({email, password}, saveCookies);
     };
 
     const saveSessionCookies = rememberMe => {

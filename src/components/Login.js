@@ -11,6 +11,7 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import {setSessionCookie} from "../utils/CookiesUtils";
 
 const useStyles = makeStyles(theme => ({
     '@global': {
@@ -37,21 +38,24 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export default withRouter(function Login({onUserLogin, history}) {
+export default withRouter(function Login({onUserLogin, history, setSessionCookie}) {
     const classes = useStyles();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [saveCookies, setSaveCookies] = useState(false);
 
     const handleChange = valueSetter => ({ target: {value} }) => valueSetter(value);
 
     const login = event => {
         event.preventDefault();
         history.push('/home');
+        if (saveCookies)
+            setSessionCookie({email});
         onUserLogin({email, password});
     };
 
     const saveSessionCookies = rememberMe => {
-        //TODO
+        setSaveCookies(rememberMe);
     };
 
     return (
@@ -92,7 +96,7 @@ export default withRouter(function Login({onUserLogin, history}) {
                         autoComplete='current-password'
                     />
                     <FormControlLabel
-                        control={<Checkbox onChange={saveSessionCookies} value='remember' color='primary' />}
+                        control={<Checkbox value={saveCookies} onChange={saveSessionCookies} color='primary' />}
                         label='Recordarme'
                     />
                     <Button

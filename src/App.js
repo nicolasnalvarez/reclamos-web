@@ -63,7 +63,6 @@ function App({history}) {
     // );
 
     const registerUser = () => {
-        // setCurrentUser(newUser);
         history.push('/login');
     };
 
@@ -95,7 +94,6 @@ function App({history}) {
         //     .catch(error => console.error('Error:', error));
         setLoggedIn(true);
         setCurrentUser(fakeUser);
-        setSessionCookie(fakeUser);
     };
 
     const onUserLogOut = () => {
@@ -130,7 +128,7 @@ function App({history}) {
                             <SignUp registerUser={registerUser}/>
                         </Route>
                         <Route path='/login'>
-                            <Login onUserLogin={onUserLogin}/>
+                            <Login setSessionCookie={setSessionCookie} onUserLogin={onUserLogin}/>
                         </Route>
                         <Route path='/home'>
                             <Home/>

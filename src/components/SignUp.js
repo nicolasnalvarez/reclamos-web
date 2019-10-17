@@ -36,7 +36,7 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export default function SignUp() {
+export default function SignUp({registerUser}) {
     const classes = useStyles();
     const [dniHasError, setDniError] = useState(false);
     const [passwordHasError, setPasswordError] = useState(false);
@@ -65,27 +65,32 @@ export default function SignUp() {
     const isValidPassword = password => /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/.test(password);
 
     const register = () => {
+        // event.preventDefault();
         const newUser = {
           nombre: firstName,
           apellido: lastName,
           dni: dni,
-          email: email,
+          usuario: email,
           password: password
         };
 
-        fetch('http://localhost:8080/register',
-            {
-                method: 'POST',
-                body: JSON.stringify(newUser),
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            })
-            .then(response => response.json())
-            .then(reclamos => {
-                this.setState({ reclamos })
-            })
-            .catch(error => console.error('Error:', error));
+        // fetch('http://localhost:8080/register',
+        //     {
+        //         method: 'POST',
+        //         body: JSON.stringify(newUser),
+        //         headers: {
+        //             'Content-Type': 'application/json'
+        //         }
+        //     })
+        //     .then(response => response.json())
+        //     .then(cleanResponse => {
+        //         if (cleanResponse.status === 201) {
+        //             registerUser();
+        //         }
+        //     })
+        //     .catch(error => console.error('Error:', error));
+
+        registerUser(newUser);
     };
 
     return (
@@ -98,7 +103,7 @@ export default function SignUp() {
                 <Typography component='h1' variant='h5'>
                     Sign up
                 </Typography>
-                <form className={classes.form} noValidate>
+                    <form className={classes.form} onSubmit={() => {return false;}}>
                     <Grid container spacing={2}>
                         <Grid item xs={12} sm={6}>
                             <TextField

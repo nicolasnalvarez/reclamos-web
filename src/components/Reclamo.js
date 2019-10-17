@@ -29,6 +29,10 @@ const Reclamo = ({dataReclamo}) => {
     console.log('dataReclamo:   ', dataReclamo)
     const isEmptyOrNull =  !dataReclamo || Object.keys(dataReclamo).size === 0;
 
+    const changeStatus = () => {
+
+    };
+
     return (
         <Card className={classes.card}>
             <CardContent>
@@ -47,7 +51,7 @@ const Reclamo = ({dataReclamo}) => {
                 </Typography>
             </CardContent>
             <CardActions>
-                <Button size="small">Learn More</Button>
+                <Button onClick={changeStatus} size="small">Cambiar estado</Button>
             </CardActions>
         </Card>
     )};

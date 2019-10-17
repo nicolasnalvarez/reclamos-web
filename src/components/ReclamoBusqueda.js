@@ -48,12 +48,12 @@ class ReclamoBusqueda extends PureComponent {
     };
 
     buscarReclamo = () => {
-        fetch(`http://localhost:8080/reclamo/${this.state.idReclamoBuscado}`)
-            .then(response => response.json())
-            .then(reclamoActual => {
-                console.log(reclamoActual);
-                this.setState({ reclamoActual })
-            });
+        // fetch(`http://localhost:8080/reclamos/${this.state.idReclamoBuscado}`)
+        //     .then(response => response.json())
+        //     .then(reclamoActual => {
+        //         console.log(reclamoActual);
+        //         this.setState({ reclamoActual })
+        //     });
     };
 
     isValidNumber = number => /^[\d]+$/.test(number);
@@ -71,7 +71,7 @@ class ReclamoBusqueda extends PureComponent {
                     estado: 'enProceso'
                 }
             });
-            this.buscarReclamo();
+            //this.buscarReclamo();
     };
 
     render() {
@@ -96,7 +96,7 @@ class ReclamoBusqueda extends PureComponent {
                             onChange={this.handleChange('idReclamoBuscado')}
                         />
                     </form>
-                    <Button onClick={this.handleClick} variant='contained' color='primary'
+                    <Button disabled={!idReclamoBuscado || hasError} onClick={this.handleClick} variant='contained' color='primary'
                             size='small' className={classes.button}>
                         Buscar reclamo
                     </Button>

@@ -1,11 +1,11 @@
-import React from 'react';
+import React, {useState} from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
-import {Link} from 'react-router-dom';
+import {Link, withRouter} from 'react-router-dom';
 import Grid from '@material-ui/core/Grid';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
@@ -17,7 +17,7 @@ function Copyright() {
         <Typography variant='body2' color='textSecondary' align='center'>
             {'Copyright © '}
             <Link color='inherit' href='https://material-ui.com/'>
-                Your Website
+                Aplicaciones Distribuidas -
             </Link>{' '}
             {new Date().getFullYear()}
             {'.'}
@@ -50,11 +50,21 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export default function Login() {
+export default withRouter(function Login({onUserLogin, history}) {
     const classes = useStyles();
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
 
-    const login = () => {
+    const handleChange = valueSetter => ({ target: {value} }) => valueSetter(value);
 
+    const login = event => {
+        event.preventDefault();
+        history.push('/home');
+        onUserLogin({email, password});
+    };
+
+    const saveSessionCookies = rememberMe => {
+        //TODO
     };
 
     return (
@@ -62,12 +72,14 @@ export default function Login() {
             <CssBaseline/>
             <div className={classes.paper}>
                 <Avatar className={classes.avatar}>
-                    <LockOutlinedIcon />
+                    <LockOutlinedIcon/>
                 </Avatar>
                 <Typography component='h1' variant='h5'>
                     Log in
                 </Typography>
-                <form className={classes.form} noValidate>
+                <form className={classes.form} noValidate onSubmit={event => {
+                    return false;
+                }}>
                     <TextField
                         variant='outlined'
                         margin='normal'
@@ -77,6 +89,7 @@ export default function Login() {
                         label='Dirección de email'
                         name='email'
                         autoComplete='email'
+                        onChange={handleChange(setEmail)}
                         autoFocus
                     />
                     <TextField
@@ -88,10 +101,11 @@ export default function Login() {
                         label='Contraseña'
                         type='password'
                         id='password'
+                        onChange={handleChange(setPassword)}
                         autoComplete='current-password'
                     />
                     <FormControlLabel
-                        control={<Checkbox value='remember' color='primary' />}
+                        control={<Checkbox onChange={saveSessionCookies} value='remember' color='primary' />}
                         label='Recordarme'
                     />
                     <Button
@@ -115,4 +129,4 @@ export default function Login() {
             </div>
         </Container>
     );
-}
+})

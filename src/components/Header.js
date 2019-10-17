@@ -1,4 +1,4 @@
-import React, {PureComponent} from 'react';
+import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -6,8 +6,7 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import PropTypes from 'prop-types';
 import CustomizedMenus from './CustomizedMenus';
-import {Link} from "react-router-dom";
-import Box from "@material-ui/core/Box";
+import {Link, withRouter} from "react-router-dom";
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -18,7 +17,8 @@ const useStyles = makeStyles(theme => ({
     },
     title: {
         flexGrow: 1,
-        fontSize: 30
+        fontSize: 30,
+        cursor: 'pointer'
     },
     link: {
         textDecoration: 'none',
@@ -26,7 +26,7 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-const Header = ({title, isLoggedIn}) => {
+const Header = ({title, isLoggedIn, history}) => {
     const classes = useStyles();
     const menuOptions = isLoggedIn
         ? [
@@ -36,10 +36,14 @@ const Header = ({title, isLoggedIn}) => {
         ]
         :[{iconName: 'search', text: 'Buscar Reclamo', subText: 'Podrá buscar uno o varios reclamos según cierto criterio', pathTo: '/busquedareclamos'}];
 
+    const redirectToHome = () => {
+        history.push('/');
+    };
+
     return (
         <AppBar component='header' position='static' className={classes.root}>
             <Toolbar>
-                <Typography variant='h1' className={classes.title}>
+                <Typography onClick={redirectToHome} variant='h1' className={classes.title}>
                     {title}
                 </Typography>
                 <CustomizedMenus menuOptions={menuOptions}/>
@@ -48,4 +52,4 @@ const Header = ({title, isLoggedIn}) => {
         </AppBar>
 )};
 
-export default Header;
+export default withRouter(Header);

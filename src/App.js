@@ -41,30 +41,68 @@ const RECLAMOS = [
 ];
 //nuevo, abierto, enProceso, desestimado, anulado, terminado
 
-function App() {
-    const [isLoggedIn, logIn] = useState(true);
+function App({history}) {
+    const [isLoggedIn, setLoggedIn] = useState(false);
+    const [currentUser, setCurrentUser] = useState(null);
+
+    const registerUser = () => {
+        // setCurrentUser(newUser);
+        history.push('/login');
+    };
+
+    const onUserLogin = loginData => {
+        // fetch('http://localhost:8080/login',
+        //     {
+        //         method: 'POST',
+        //         body: JSON.stringify(loginData),
+        //         headers: {
+        //             'Content-Type': 'application/json'
+        //         }
+        //     })
+        //     .then(response => response.json())
+        //     .then(cleanResponse => {
+        //         if (cleanResponse.status === 201) {
+        //              setLoggedIn(true);
+        //             setCurrentUser(cleanResponse.body);
+        //         }
+        //     })
+        //     .catch(error => console.error('Error:', error));
+        setLoggedIn(true);
+        setCurrentUser({
+            firstName: 'dario',
+            lastName: 'test',
+            dni: '35221329',
+            email: 'dar@ovo.com',
+            password: 'pass'
+        });
+    };
+
+    // TODO: agregar currentUser al Context y así evitar pasarlo como prop varias veces
 
     return (
-        <BrowserRouter>
+        <BrowserRouter history={history}>
             <>
                 <Header isLoggedIn={isLoggedIn} title='Gestión de reclamos'/>
                 <Switch>
                     <Route path='/reclamo'>
-                        <ReclamoForm/>
+                        <ReclamoForm currentUser={currentUser}/>
                     </Route>
                     <Route path='/reclamos'>
-                        <Reclamos titulo='RECLAMOS' reclamos={RECLAMOS}/>
+                        <Reclamos currentUser={currentUser} titulo='RECLAMOS' reclamos={RECLAMOS}/>
                     </Route>
                     <Route path='/busquedareclamos'>
                         <ReclamoBusqueda/>
                     </Route>
                     <Route path='/registro'>
-                        <SignUp/>
+                        <SignUp registerUser={registerUser}/>
                     </Route>
                     <Route path='/login'>
-                        <Login/>
+                        <Login onUserLogin={onUserLogin}/>
                     </Route>
-                    <Route path='/'>
+                    <Route path='/home'>
+                        <Home/>
+                    </Route>
+                    <Route path='*'>
                         <Home/>
                     </Route>
                 </Switch>

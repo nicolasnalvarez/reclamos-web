@@ -37,14 +37,54 @@ const styles = theme => ({
 
 class ReclamoForm extends PureComponent {
     static propTypes = {
-        classes: PropTypes.object.isRequired
+        classes: PropTypes.object.isRequired,
+        currentUser: PropTypes.object
     };
 
     state = {
         selected: 'Dueño',
         hasError: false,
-        dni: '',
-        userType: ''
+        userType: '',
+        edificios: [],
+        unidades: []
+    };
+
+    componentDidMount() {
+        const {tipoUsuario, dni} = this.props.currentUser;
+
+        // fetch(`localhost:8080/edificios/personas/${tipoUsuario}/${dni}`,
+        //     {
+        //         method: 'GET',
+        //         headers: {
+        //             'Content-Type': 'application/json'
+        //         }
+        //     })
+        //     .then(response => response.json())
+        //     .then(cleanResponse => {
+        //         if (cleanResponse.status === 201) {
+        //             this.setState({edificios: cleanResponse.body});
+        //         }
+        //     })
+        //     .catch(error => console.error('Error:', error));
+    }
+
+    onChangeEdificio = edificioSelected => {
+        const {tipoUsuario, dni} = this.props.currentUser;
+
+        fetch(`localhost:8080/unidades/personas/${tipoUsuario}/${dni}/edificios/${this.state.edificioSelected.id}`,
+            {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(cleanResponse => {
+                if (cleanResponse.status === 201) {
+                    this.setState({edificios: cleanResponse.body});
+                }
+            })
+            .catch(error => console.error('Error:', error));
     };
 
     handleChange = name => ({ target: {value} }) => {
@@ -65,7 +105,7 @@ class ReclamoForm extends PureComponent {
 
     render() {
         const {classes} = this.props;
-        const {selected, hasError, dni} = this.state;
+        const {selected, hasError} = this.state;
         return (
             <Container component='main' maxWidth='sm'>
                 <Paper elevation={4} className={classes.formSubcontainer}>
@@ -85,21 +125,21 @@ class ReclamoForm extends PureComponent {
                                 {hasError && <FormHelperText>Campo requerido!</FormHelperText>}
                             </FormControl>
                         </FormGroup>
-                        <FormGroup>
-                            <TextField
-                                id='dni'
-                                label='DNI'
-                                margin='normal'
-                                variant='standard'
-                                helperText='Sólo números, ejemplo: 34531922'
-                                placeholder='Por favor, ingrese su DNI'
-                                className={classes.formControl}
-                                value={dni}
-                                name='dni'
-                                onChange={this.handleChange('dni')}
-                                error={!this.isValidNumber}
-                            />
-                        </FormGroup>
+                        {/*<FormGroup>*/}
+                        {/*    <TextField*/}
+                        {/*        id='dni'*/}
+                        {/*        label='DNI'*/}
+                        {/*        margin='normal'*/}
+                        {/*        variant='standard'*/}
+                        {/*        helperText='Sólo números, ejemplo: 34531922'*/}
+                        {/*        placeholder='Por favor, ingrese su DNI'*/}
+                        {/*        className={classes.formControl}*/}
+                        {/*        value={dni}*/}
+                        {/*        name='dni'*/}
+                        {/*        onChange={this.handleChange('dni')}*/}
+                        {/*        error={!this.isValidNumber}*/}
+                        {/*    />*/}
+                        {/*</FormGroup>*/}
                     </form>
                     <Button onClick={this.handleClick} variant='contained' color='primary'
                             size='small' className={classes.button}>

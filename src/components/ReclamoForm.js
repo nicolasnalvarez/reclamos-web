@@ -9,6 +9,8 @@ import Grid from '@material-ui/core/Grid';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Typography from '@material-ui/core/Typography';
 import './ReclamoForm.scss';
+import Chip from '@material-ui/core/Chip';
+import DoneIcon from '@material-ui/icons/Done';
 
 const styles = theme => ({
     root: {
@@ -60,7 +62,9 @@ class ReclamoForm extends PureComponent {
             comentario: '',
             ubicacion: '',
             imagenes: []
-        }
+        },
+        altaReclamoStatusMessage: 'Reclamo generado exitosamente',
+        altaReclamoSubmitted: false
     };
 
     // this.id = id;
@@ -68,6 +72,14 @@ class ReclamoForm extends PureComponent {
     // this.numero = numero;
     // this.habitado = habitado;
     // this.edificio = edificio;
+
+    handleDelete = () => {
+        alert('You clicked the delete icon.');
+    };
+
+    handleClick = () => {
+        alert('You clicked the Chip.');
+    };
 
     componentDidMount() {
         const currentUser = this.props.currentUser;
@@ -200,24 +212,26 @@ class ReclamoForm extends PureComponent {
             imagenes: formValues.imagenes
         };
 
-        fetch('http://localhost:8080/reclamos',
-            {
-                method: 'POST',
-                body: JSON.stringify(newReclamo),
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            })
-            .then(response => response.json())
-            .then(cleanResponse => {
+        this.setState({altaReclamoStatusMessage: 'Reclamo generado exitosamente'});
 
-            })
-            .catch(error => console.error('Error:', error));
+        // fetch('http://localhost:8080/reclamos',
+        //     {
+        //         method: 'POST',
+        //         body: JSON.stringify(newReclamo),
+        //         headers: {
+        //             'Content-Type': 'application/json'
+        //         }
+        //     })
+        //     .then(response => response.json())
+        //     .then(cleanResponse => {
+                 this.setState({altaReclamoSubmitted: true})
+        //     })
+        //     .catch(error => console.error('Error:', error));
     };
 
     render() {
         const {classes} = this.props;
-        const {formValues, hasError, edificios, unidades} = this.state;
+        const {formValues, hasError, edificios, unidades, altaReclamoSubmitted, altaReclamoStatusMessage} = this.state;
 
         // Buscar una mejor manera
         const canSubmit = formValues.edificioSelected && formValues.unidadSelected && formValues.comentario;
@@ -352,6 +366,13 @@ class ReclamoForm extends PureComponent {
                     >
                             Generar reclamo
                     </Button>
+                    {altaReclamoSubmitted && <Chip
+                        color='primary'
+                        label={altaReclamoStatusMessage}
+                        onClick={this.handleClick}
+                        onDoubleClick={this.handleClick}
+                        deleteIcon={<DoneIcon />}
+                    />}
                 </div>
             </Container>
         );

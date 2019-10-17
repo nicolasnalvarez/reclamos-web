@@ -50,6 +50,16 @@ const RECLAMOS = [
 ];
 //nuevo, abierto, enProceso, desestimado, anulado, terminado
 
+const fakeUser = {
+    firstName: 'dario',
+    lastName: 'test',
+    dni: '35221329',
+    email: 'dar@ovo.com',
+    password: 'pass',
+    tipoUsuario: 1,
+    usuario: 'dlipartiti'
+};
+
 function App({history}) {
     const [session, setSession] = useState(getSessionCookie());
     const [isLoggedIn, setLoggedIn] = useState(!!session.email);
@@ -61,8 +71,11 @@ function App({history}) {
     //     },
     //     [session]
     // );
+
+    // Funciona como el componentDidMount()
     useEffect(() => {
-        // Funciona como el componentDidMount()
+        if (session.usuario)
+            setCurrentUser(fakeUser);
     });
 
     const registerUser = () => {
@@ -70,19 +83,14 @@ function App({history}) {
     };
 
     const onUserLogin = (loginData, rememberMe) => {
-        const fakeUser = {
-            firstName: 'dario',
-            lastName: 'test',
-            dni: '35221329',
-            email: 'dar@ovo.com',
-            password: 'pass',
-            tipoUsuario: 1
-        };
-
         if (rememberMe)
-            setSessionCookie({email: fakeUser.email, dni: fakeUser.dni, tipoUsuario: 1});
+            setSessionCookie({usuario: fakeUser.usuario, email: fakeUser.email, dni: fakeUser.dni, tipoUsuario: 1});
 
-        // fetch('http://localhost:8080/login',
+        setLoggedIn(true);
+        setCurrentUser(fakeUser);
+
+        // CON SERVER DESCOMENTAR LO SIGUIENTE:
+        // fetch('http://localhost:8080/auth/login',
         //     {
         //         method: 'POST',
         //         body: JSON.stringify(loginData),
@@ -92,14 +100,14 @@ function App({history}) {
         //     })
         //     .then(response => response.json())
         //     .then(cleanResponse => {
-        //         if (cleanResponse.status === 201) {
-        //              setLoggedIn(true);
+        //         if (cleanResponse.status === 200) {
+        //             setLoggedIn(true);
         //             setCurrentUser(cleanResponse.body);
+        //             if (rememberMe)
+        //                 setSessionCookie(cleanResponse.body);
         //         }
         //     })
         //     .catch(error => console.error('Error:', error));
-        setLoggedIn(true);
-        setCurrentUser(fakeUser);
     };
 
     const onUserLogOut = () => {

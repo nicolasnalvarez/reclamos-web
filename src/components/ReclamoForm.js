@@ -77,7 +77,15 @@ class ReclamoForm extends PureComponent {
     // this.edificio = edificio;
 
     componentDidMount() {
-        const {tipoUsuario, dni} = this.props.currentUser;
+        const currentUser = this.props.currentUser;
+
+        if (!currentUser) {
+            const tipoUsuario = 1;
+            const dni = '35255211';
+        } else {
+            const tipoUsuario = currentUser.tipoUsuario;
+            const dni = currentUser.dni;
+        }
 
         // fetch(`localhost:8080/edificios/personas/${tipoUsuario}/${dni}`,
         //     {
@@ -102,7 +110,16 @@ class ReclamoForm extends PureComponent {
     }
 
     onChangeEdificio = edificioSelected => {
-        const {tipoUsuario, dni} = this.props.currentUser;
+        const currentUser = this.props.currentUser;
+
+        if (!currentUser) {
+            const tipoUsuario = 1;
+            const dni = '35255211';
+        } else {
+            const tipoUsuario = currentUser.tipoUsuario;
+            const dni = currentUser.dni;
+        }
+
 
         // fetch(`localhost:8080/unidades/personas/${tipoUsuario}/${dni}/edificios/${this.state.edificioSelected.id}`,
         //     {
@@ -195,7 +212,7 @@ class ReclamoForm extends PureComponent {
                                     //         className: classes.menu,
                                     //     },
                                     // }}
-                                    helperText='Seleccione el edificio'
+                                    helperText='Seleccione un edificio'
                                     autoFocus
                                     required
                                 >
@@ -213,28 +230,31 @@ class ReclamoForm extends PureComponent {
                                     fullWidth
                                     value={formValues.unidadSelected}
                                     onChange={this.handleChange('unidadSelected')}
+                                    disabled={!formValues.edificioSelected}
                                     // SelectProps={{
                                     //     MenuProps: {
                                     //         className: classes.menu,
                                     //     },
                                     // }}
-                                    helperText='Por favor seleccione la unidad'
+                                    helperText='Seleccione una unidad'
                                     autoFocus
                                     required
                                 >
-                                    {unidades.length > 0 && unidades.map(unidad => (
-                                        <MenuItem key={unidad.id} value={unidad.id}>
-                                            {`Piso ${unidad.piso} - Dpto. ${unidad.numero}`}
-                                        </MenuItem>
+                                    {unidades.length > 0 && [<MenuItem key='SinUnidad' value={'0'}>No es en una unidad</MenuItem>]
+                                        .concat(unidades.map(unidad => (
+                                            <MenuItem key={unidad.id} value={unidad.id}>
+                                                {`Piso ${unidad.piso} - Dpto. ${unidad.numero}`}
+                                            </MenuItem>
+                                        )
                                     ))}
                                 </TextField>
                             </Grid>
                             {
-                                formValues.unidadSelected.id === '0' &&
-                                <Grid item xs={12} sm={6}>
+                                formValues.unidadSelected === '0' &&
+                                <Grid item xs={12}>
                                     <TextField
                                         id='ubicacion'
-                                        label='Multiline'
+                                        label='Ubicación del hecho'
                                         variant='outlined'
                                         fullWidth
                                         multiline
@@ -246,14 +266,15 @@ class ReclamoForm extends PureComponent {
                                     />
                                 </Grid>
                             }
-                            <Grid item xs={12} sm={6}>
+                            <Grid item xs={12}>
                                 <TextField
                                     id='comentario'
-                                    label='Multiline'
+                                    label='Comentario'
                                     variant='outlined'
                                     fullWidth
                                     multiline
-                                    rowsMax='4'
+                                    rows={4}
+                                    rowsMax='6'
                                     value={formValues.comentario}
                                     onChange={this.handleChange('comentario')}
                                     autoFocus

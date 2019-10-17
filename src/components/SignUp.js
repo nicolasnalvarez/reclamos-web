@@ -44,12 +44,12 @@ export default function SignUp({registerUser}) {
     const [dni, setDni] = useState('');
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
-    const [email, setEmail] = useState('');
+    const [user, setUser] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
 
     // Buscar una mejor manera
-    const canSubmit = !dniHasError && dni && firstName && lastName && email && password && confirmPassword;
+    const canSubmit = !dniHasError && dni && firstName && lastName && user && password && confirmPassword;
 
     const handleChange = (valueSetter, errorHandler, errorSetter) => ({ target: {value} }) => {
         valueSetter(value);
@@ -70,27 +70,25 @@ export default function SignUp({registerUser}) {
           nombre: firstName,
           apellido: lastName,
           dni: dni,
-          usuario: email,
+          usuario: user,
           password: password
         };
 
-        // fetch('http://localhost:8080/register',
-        //     {
-        //         method: 'POST',
-        //         body: JSON.stringify(newUser),
-        //         headers: {
-        //             'Content-Type': 'application/json'
-        //         }
-        //     })
-        //     .then(response => response.json())
-        //     .then(cleanResponse => {
-        //         if (cleanResponse.status === 201) {
-        //             registerUser();
-        //         }
-        //     })
-        //     .catch(error => console.error('Error:', error));
-
-        registerUser(newUser);
+        fetch('http://localhost:8080/auth/register',
+            {
+                method: 'POST',
+                body: JSON.stringify(newUser),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(cleanResponse => {
+                if (cleanResponse.status === 201) {
+                    registerUser();
+                }
+            })
+            .catch(error => console.error('Error:', error));
     };
 
     return (
@@ -151,12 +149,12 @@ export default function SignUp({registerUser}) {
                                 variant='outlined'
                                 required
                                 fullWidth
-                                value={email}
-                                id='email'
-                                label='Dirección de email'
-                                name='email'
-                                autoComplete='email'
-                                onChange={handleChange(setEmail)}
+                                value={user}
+                                id='user'
+                                label='Usuario'
+                                name='user'
+                                autoComplete='user'
+                                onChange={handleChange(setUser)}
                             />
                         </Grid>
                         <Grid item xs={12}>

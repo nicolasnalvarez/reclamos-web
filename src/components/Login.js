@@ -40,7 +40,7 @@ const useStyles = makeStyles(theme => ({
 
 export default withRouter(function Login({onUserLogin, history}) {
     const classes = useStyles();
-    const [email, setEmail] = useState('');
+    const [usuario, setUsuario] = useState('');
     const [password, setPassword] = useState('');
     const [saveCookies, setSaveCookies] = useState(false);
 
@@ -49,7 +49,7 @@ export default withRouter(function Login({onUserLogin, history}) {
     const login = event => {
         event.preventDefault();
         history.push('/home');
-        onUserLogin({email, password}, saveCookies);
+        onUserLogin({usuario, password}, saveCookies);
     };
 
     const saveSessionCookies = rememberMe => {
@@ -74,11 +74,11 @@ export default withRouter(function Login({onUserLogin, history}) {
                         margin='normal'
                         required
                         fullWidth
-                        id='email'
-                        label='Dirección de email'
-                        name='email'
-                        autoComplete='email'
-                        onChange={handleChange(setEmail)}
+                        id='nombre'
+                        label='Usuario'
+                        name='nombre'
+                        autoComplete='usuario'
+                        onChange={handleChange(setUsuario)}
                         autoFocus
                     />
                     <TextField

@@ -45,15 +45,15 @@ class Reclamos extends PureComponent {
     };
 
     componentDidMount() {
-        // fetch('http://localhost:8080/reclamos')
-        //   .then(response => response.json())
-        //   .then(reclamos => {
-        //         console.log(reclamos);
-        //         this.setState({ reclamos })
-        //   });
+        fetch('http://localhost:8080/reclamos')
+          .then(response => response.json())
+          .then(reclamos => {
+                console.log(reclamos);
+                this.setState({ reclamos })
+          });
 
         // Solo para probar, no debería recibir reclamos como prop sino usando el response del fetch
-        this.setState({ reclamos: this.props.reclamos })
+        // this.setState({ reclamos: this.props.reclamos })
       }
 
     render() {

@@ -48,30 +48,30 @@ class ReclamoBusqueda extends PureComponent {
     };
 
     buscarReclamo = () => {
-        // fetch(`http://localhost:8080/reclamos/${this.state.idReclamoBuscado}`)
-        //     .then(response => response.json())
-        //     .then(reclamoActual => {
-        //         console.log(reclamoActual);
-        //         this.setState({ reclamoActual })
-        //     });
+        fetch(`http://localhost:8080/reclamos/${this.state.idReclamoBuscado}`)
+            .then(response => response.json())
+            .then(reclamoActual => {
+                console.log(reclamoActual);
+                this.setState({ reclamoActual })
+            });
     };
 
     isValidNumber = number => /^[\d]+$/.test(number);
 
     handleClick = () => {
         if (!this.state.hasError && !!this.state.idReclamoBuscado)
-            this.setState({
-                reclamoActual: {
-                    id: '01401958',
-                    documento: '40019302',
-                    idEdificio: '2',
-                    idUnidad: '4',
-                    ubicacion: "Griveo 2030, CABA",
-                    descripcion: 'Descripción del reclamo 3 recontra super mega archi larga con un montón de cosas adentro para ver como se ve acá, porque si se ve feo o rompe cagamos fuego',
-                    estado: 'enProceso'
-                }
-            });
-            //this.buscarReclamo();
+            // this.setState({
+            //     reclamoActual: {
+            //         id: '01401958',
+            //         documento: '40019302',
+            //         idEdificio: '2',
+            //         idUnidad: '4',
+            //         ubicacion: "Griveo 2030, CABA",
+            //         descripcion: 'Descripción del reclamo 3 recontra super mega archi larga con un montón de cosas adentro para ver como se ve acá, porque si se ve feo o rompe cagamos fuego',
+            //         estado: 'enProceso'
+            //     }
+            // });
+            this.buscarReclamo();
     };
 
     render() {

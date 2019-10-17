@@ -67,7 +67,7 @@ class ReclamoForm extends PureComponent {
         const {classes} = this.props;
         const {selected, hasError, dni} = this.state;
         return (
-            <Container maxWidth='sm'>
+            <Container component='main' maxWidth='sm'>
                 <Paper elevation={4} className={classes.formSubcontainer}>
                     <form>
                         <FormGroup className={classes.root} aria-autocomplete='none'>

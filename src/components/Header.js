@@ -7,6 +7,7 @@ import Button from '@material-ui/core/Button';
 import PropTypes from 'prop-types';
 import CustomizedMenus from './CustomizedMenus';
 import {Link} from "react-router-dom";
+import Box from "@material-ui/core/Box";
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -17,6 +18,7 @@ const useStyles = makeStyles(theme => ({
     },
     title: {
         flexGrow: 1,
+        fontSize: 30
     },
     link: {
         textDecoration: 'none',
@@ -35,17 +37,15 @@ const Header = ({title, isLoggedIn}) => {
         :[{iconName: 'search', text: 'Buscar Reclamo', subText: 'Podrá buscar uno o varios reclamos según cierto criterio', pathTo: '/busquedareclamos'}];
 
     return (
-    <div className={classes.root}>
-        <AppBar position='static'>
+        <AppBar component='header' position='static' className={classes.root}>
             <Toolbar>
-                <CustomizedMenus menuOptions={menuOptions}/>
-                <Typography variant='h6' className={classes.title}>
+                <Typography variant='h1' className={classes.title}>
                     {title}
                 </Typography>
+                <CustomizedMenus menuOptions={menuOptions}/>
                 <Button color='inherit'><Link className={classes.link} to="/login">Log in</Link></Button>
             </Toolbar>
         </AppBar>
-    </div>
 )};
 
 export default Header;

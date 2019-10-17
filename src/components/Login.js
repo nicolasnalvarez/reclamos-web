@@ -32,7 +32,7 @@ const useStyles = makeStyles(theme => ({
         },
     },
     paper: {
-        marginTop: theme.spacing(8),
+        margin: theme.spacing(4, 0, 4, 0),
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
@@ -59,7 +59,7 @@ export default function Login() {
 
     return (
         <Container component='main' maxWidth='xs'>
-            <CssBaseline />
+            <CssBaseline/>
             <div className={classes.paper}>
                 <Avatar className={classes.avatar}>
                     <LockOutlinedIcon />
@@ -104,15 +104,10 @@ export default function Login() {
                     >
                         Loguearse
                     </Button>
-                    <Grid container>
-                        <Grid item xs>
-                            <Link href='#' variant='body2'>
-                                Forgot password?
-                            </Link>
-                        </Grid>
+                    <Grid justify='center' container>
                         <Grid item>
                             <Link to='/registro' variant='body2'>
-                                No tienes una cuenta? Registrate
+                                ¿No tenés una cuenta? Registrate
                             </Link>
                         </Grid>
                     </Grid>

@@ -60,17 +60,17 @@ class ReclamoBusqueda extends PureComponent {
 
     handleClick = () => {
         if (!this.state.hasError && !!this.state.idReclamoBuscado)
-            // this.setState({
-                // reclamoActual: {
-                //     id: '01401958',
-                //     documento: '40019302',
-                //     idEdificio: '2',
-                //     idUnidad: '4',
-                //     ubicacion: "Griveo 2030, CABA",
-                //     descripcion: 'Descripción del reclamo 3 recontra super mega archi larga con un montón de cosas adentro para ver como se ve acá, porque si se ve feo o rompe cagamos fuego',
-                //     estado: 'enProceso'
-                // }
-            // });
+            this.setState({
+                reclamoActual: {
+                    id: '01401958',
+                    documento: '40019302',
+                    idEdificio: '2',
+                    idUnidad: '4',
+                    ubicacion: "Griveo 2030, CABA",
+                    descripcion: 'Descripción del reclamo 3 recontra super mega archi larga con un montón de cosas adentro para ver como se ve acá, porque si se ve feo o rompe cagamos fuego',
+                    estado: 'enProceso'
+                }
+            });
             this.buscarReclamo();
     };
 
@@ -79,7 +79,7 @@ class ReclamoBusqueda extends PureComponent {
         const {idReclamoBuscado, hasError, reclamoActual} = this.state;
 
         return (
-            <Container maxWidth='md'>
+            <Container component='main' maxWidth='md'>
                 <Paper elevation={4} className={classes.formSubcontainer}>
                     <form>
                         <TextField

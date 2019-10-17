@@ -55,11 +55,11 @@ class Reclamos extends PureComponent {
 
     render() {
         const {titulo, classes} = this.props;
-        const {reclamos} = this.state
+        const {reclamos} = this.state;
 
         return (
-            <Container title='Lista de Reclamos'  maxWidth='lg'>
-              <h1>{titulo}</h1>
+            <Container className='topContent' component='main' title='Lista de Reclamos' maxWidth='lg'>
+              <h2>{titulo}</h2>
                 <List style={{border: '1px solid grey'}} className={classes.root}>
                     {
                         reclamos.map(({id, documento, idEdificio, idUnidad, ubicacion, descripcion, estado}) =>

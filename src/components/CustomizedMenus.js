@@ -75,11 +75,11 @@ export default function CustomizedMenus({menuOptions}) {
                 variant="contained"
                 style={{opacity: '0.7', backgroundColor: 'black', color: '#fff', marginRight: '10px', width: '160px', boxShadow: '0px 1px 5px 0px rgba(249, 249, 249, 0.2), 0px 2px 2px 0px rgba(255, 253, 253, 0.14), 0px 3px 1px -2px rgba(255, 255, 255, 0.12)'}}
                 onClick={handleClick}
-                onMouseEnter={event => {
-                    const currentEvent = {currentTarget: event.currentTarget};
-                    event.persist();
-                    setTimeout(event => handleClick(currentEvent), 600);
-                }}
+                // onMouseEnter={event => {
+                //     const currentEvent = {currentTarget: event.currentTarget};
+                //     event.persist();
+                //     setTimeout(event => handleClick(currentEvent), 300);
+                // }}
             >
                 <span style={{opacity: '1'}}>Menu</span>
             </Button>

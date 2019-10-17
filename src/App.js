@@ -1,6 +1,4 @@
 import React, {useState} from 'react';
-
-import './App.css';
 import ReclamoForm from './components/ReclamoForm';
 import Header from './components/Header';
 import Footer from './components/Footer'
@@ -9,6 +7,8 @@ import ReclamoBusqueda from './components/ReclamoBusqueda';
 import Login from './components/Login';
 import {BrowserRouter, Route, Switch} from 'react-router-dom';
 import SignUp from './components/SignUp';
+import Home from "./components/Home";
+import './App.scss';
 
 const RECLAMOS = [
     {
@@ -42,12 +42,12 @@ const RECLAMOS = [
 //nuevo, abierto, enProceso, desestimado, anulado, terminado
 
 function App() {
-    const [isLoggedIn, logIn] = useState(false);
+    const [isLoggedIn, logIn] = useState(true);
 
     return (
         <BrowserRouter>
             <>
-                <Header isLoggedIn={isLoggedIn} title='Sistema de gestión de reclamos'/>
+                <Header isLoggedIn={isLoggedIn} title='Gestión de reclamos'/>
                 <Switch>
                     <Route path='/reclamo'>
                         <ReclamoForm/>
@@ -65,7 +65,7 @@ function App() {
                         <Login/>
                     </Route>
                     <Route path='/'>
-                        <Home />
+                        <Home/>
                     </Route>
                 </Switch>
                 <Footer/>
@@ -75,15 +75,3 @@ function App() {
 }
 
 export default App;
-
-function Home() {
-    return <h2>Home</h2>;
-}
-
-function About() {
-    return <h2>About</h2>;
-}
-
-function Users() {
-    return <h2>Users</h2>;
-}

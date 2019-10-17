@@ -1,10 +1,9 @@
 import React, {useState} from 'react';
+import _ from 'lodash';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
 import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
@@ -19,7 +18,7 @@ const useStyles = makeStyles(theme => ({
         },
     },
     paper: {
-        marginTop: theme.spacing(8),
+        margin: theme.spacing(4, 0, 4, 0),
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
@@ -39,15 +38,54 @@ const useStyles = makeStyles(theme => ({
 
 export default function SignUp() {
     const classes = useStyles();
+    const [dniHasError, setDniError] = useState(false);
+    const [passwordHasError, setPasswordError] = useState(false);
+    const [confirmPasswordHasError, setConfirmPasswordError] = useState(false);
+    const [dni, setDni] = useState('');
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
 
-    const [hasError, handleError] = useState(false);
+    // Buscar una mejor manera
+    const canSubmit = !dniHasError && dni && firstName && lastName && email && password && confirmPassword;
 
-    const handleChange = name => ({ target: {value} }) => {
-        // this.setState({
-        //     [name]: value,
-        //     hasError: !this.isValidNumber(value)
-        // });
-        handleError(true);
+    const handleChange = (valueSetter, errorHandler, errorSetter) => ({ target: {value} }) => {
+        valueSetter(value);
+        if (errorHandler)
+            errorHandler(value, errorSetter);
+    };
+
+    const handleDniError = (value, errorSetter) => errorSetter(!value || !isValidNumber(value) || !_.inRange(value.length, 7, 9));
+    const handlePasswordError = (value, errorSetter) => errorSetter(!value || !isValidPassword(value));
+    const handleConfirmPasswordError = (value, errorSetter) => errorSetter(!value || value !== password);
+
+    const isValidNumber = number => /^[\d]+$/.test(number);
+    const isValidPassword = password => /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/.test(password);
+
+    const register = () => {
+        const newUser = {
+          nombre: firstName,
+          apellido: lastName,
+          dni: dni,
+          email: email,
+          password: password
+        };
+
+        fetch('http://localhost:8080/register',
+            {
+                method: 'POST',
+                body: JSON.stringify(newUser),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(reclamos => {
+                this.setState({ reclamos })
+            })
+            .catch(error => console.error('Error:', error));
     };
 
     return (
@@ -65,13 +103,15 @@ export default function SignUp() {
                         <Grid item xs={12} sm={6}>
                             <TextField
                                 autoComplete='fname'
-                                name='firstName'
                                 variant='outlined'
                                 required
                                 fullWidth
+                                value={firstName}
                                 id='firstName'
-                                label='First Name'
+                                label='Nombre'
+                                name='firstName'
                                 autoFocus
+                                onChange={handleChange(setFirstName)}
                             />
                         </Grid>
                         <Grid item xs={12} sm={6}>
@@ -79,25 +119,26 @@ export default function SignUp() {
                                 variant='outlined'
                                 required
                                 fullWidth
+                                value={lastName}
                                 id='lastName'
-                                label='Last Name'
+                                label='Apellido'
                                 name='lastName'
                                 autoComplete='lname'
+                                onChange={handleChange(setLastName)}
                             />
                         </Grid>
                         <Grid item xs={12}>
                             <TextField
+                                variant='outlined'
+                                required
+                                helperText='Por favor, ingrese su DNI sin puntos, sólo números'
+                                fullWidth
+                                value={dni}
                                 id='dni'
-                                label='ID de reclamo'
-                                margin='normal'
-                                variant='standard'
-                                helperText='Sólo números, ejemplo: 93492384'
-                                placeholder='Por favor, ingrese el código de reclamo'
-                                className={classes.formControl}
-                                value={idReclamoBuscado}
-                                name='idReclamoBuscado'
-                                error={hasError}
-                                onChange={this.handleChange('idReclamoBuscado')}
+                                label='DNI'
+                                name='dni'
+                                error={dniHasError}
+                                onChange={handleChange(setDni, handleDniError, setDniError)}
                             />
                         </Grid>
                         <Grid item xs={12}>
@@ -105,42 +146,51 @@ export default function SignUp() {
                                 variant='outlined'
                                 required
                                 fullWidth
+                                value={email}
                                 id='email'
-                                label='Email Address'
+                                label='Dirección de email'
                                 name='email'
                                 autoComplete='email'
+                                onChange={handleChange(setEmail)}
                             />
                         </Grid>
                         <Grid item xs={12}>
                             <TextField
                                 variant='outlined'
                                 required
+                                helperText='Debe tener un mínimo de 8 caracteres y al menos un número'
                                 fullWidth
+                                value={password}
                                 name='password'
-                                label='Password'
+                                label='Contraseña'
                                 type='password'
                                 id='password'
+                                error={passwordHasError}
                                 autoComplete='current-password'
+                                onChange={handleChange(setPassword, handlePasswordError, setPasswordError)}
                             />
                         </Grid>
                         <Grid item xs={12}>
                             <TextField
                                 variant='outlined'
                                 required
+                                helperText={confirmPasswordHasError? 'Debe coincidir con la contraseña' : ''}
                                 fullWidth
+                                value={confirmPassword}
                                 name='confirmPassword'
-                                label='Confirm password'
+                                label='Confirmar contraseña'
                                 type='password'
                                 id='confirmPassword'
-                                autoComplete='current-password'
+                                error={confirmPasswordHasError}
+                                onChange={handleChange(setConfirmPassword, handleConfirmPasswordError, setConfirmPasswordError)}
                             />
                         </Grid>
-                        <Grid item xs={12}>
-                            <FormControlLabel
-                                control={<Checkbox value='allowExtraEmails' color='primary' />}
-                                label='Acepto los términos y condiciones'
-                            />
-                        </Grid>
+                        {/*<Grid item xs={12}>*/}
+                        {/*    <FormControlLabel*/}
+                        {/*        control={<Checkbox value='acceptTermsAndConditions' color='primary' />}*/}
+                        {/*        label='Acepto los términos y condiciones'*/}
+                        {/*    />*/}
+                        {/*</Grid>*/}
                     </Grid>
                     <Button
                         type='submit'
@@ -148,13 +198,15 @@ export default function SignUp() {
                         variant='contained'
                         color='primary'
                         className={classes.submit}
+                        disabled={!canSubmit}
+                        onClick={register}
                     >
-                        Sign Up
+                        Registrarse
                     </Button>
                     <Grid container justify='flex-end'>
                         <Grid item>
-                            <Link href='#' variant='body2'>
-                                Already have an account? Sign in
+                            <Link to='/login' variant='body2'>
+                                ¿Ya tenés una cuenta? Logueate aquí
                             </Link>
                         </Grid>
                     </Grid>

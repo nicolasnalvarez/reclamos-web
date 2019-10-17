@@ -45,7 +45,8 @@ class Reclamos extends PureComponent {
     };
 
     componentDidMount() {
-        fetch('http://localhost:8080/reclamos')
+        //fetch('http://localhost:8080/reclamos/all/'+this.props.currentUser.dni)
+        fetch('http://localhost:8080/reclamos/all/DNI31522903')
           .then(response => response.json())
           .then(reclamos => {
                 console.log(reclamos);

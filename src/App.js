@@ -68,34 +68,36 @@ function App({history}) {
     };
 
     const onUserLogin = loginData => {
-        const fakeUser = {
-            firstName: 'dario',
-            lastName: 'test',
-            dni: '35221329',
-            email: 'dar@ovo.com',
-            password: 'pass',
-            tipoUsuario: 1
-        };
+        // const fakeUser = {
+        //     firstName: 'dario',
+        //     lastName: 'test',
+        //     dni: '35221329',
+        //     email: 'dar@ovo.com',
+        //     password: 'pass',
+        //     tipoUsuario: 1
+        // };
 
-        // fetch('http://localhost:8080/login',
-        //     {
-        //         method: 'POST',
-        //         body: JSON.stringify(loginData),
-        //         headers: {
-        //             'Content-Type': 'application/json'
-        //         }
-        //     })
-        //     .then(response => response.json())
-        //     .then(cleanResponse => {
-        //         if (cleanResponse.status === 201) {
-        //              setLoggedIn(true);
-        //             setCurrentUser(cleanResponse.body);
-        //         }
-        //     })
-        //     .catch(error => console.error('Error:', error));
-        setLoggedIn(true);
-        setCurrentUser(fakeUser);
-        setSessionCookie(fakeUser);
+        fetch('http://localhost:8080/auth/login',
+            {
+                method: 'POST',
+                body: JSON.stringify(loginData),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(cleanResponse => {
+                if (cleanResponse.status === 200) {
+                    setLoggedIn(true);
+                    setCurrentUser(cleanResponse.body);
+                    setSessionCookie(cleanResponse.body);
+                }
+            })
+            .catch(error => console.error('Error:', error));
+
+        // setLoggedIn(true);
+        // setCurrentUser(fakeUser);
+        // setSessionCookie(fakeUser);
     };
 
     const onUserLogOut = () => {

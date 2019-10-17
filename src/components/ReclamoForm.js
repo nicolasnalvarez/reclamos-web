@@ -1,22 +1,14 @@
 import React, {PureComponent} from 'react';
 import PropTypes from 'prop-types';
 import {withStyles} from '@material-ui/core/styles';
-import Input from '@material-ui/core/Input';
-import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
 import TextField from '@material-ui/core/TextField';
 import Container from '@material-ui/core/Container';
 import Button from '@material-ui/core/Button';
-import {FormGroup} from '@material-ui/core';
-import Paper from '@material-ui/core/Paper';
-import Grid from "@material-ui/core/Grid";
-import CssBaseline from "@material-ui/core/CssBaseline";
-import Avatar from "@material-ui/core/Avatar";
-import LockOutlinedIcon from "@material-ui/core/SvgIcon/SvgIcon";
-import Typography from "@material-ui/core/Typography";
+import Grid from '@material-ui/core/Grid';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import Typography from '@material-ui/core/Typography';
+import './ReclamoForm.scss';
 
 const styles = theme => ({
     root: {
@@ -27,8 +19,8 @@ const styles = theme => ({
     selectEmpty: {
         marginTop: theme.spacing(2)
     },
-    button: {
-        marginTop: theme.spacing(2)
+    submit: {
+        margin: theme.spacing(3, 0, 2),
     },
     formSubcontainer: {
         padding: theme.spacing(2),
@@ -281,11 +273,21 @@ class ReclamoForm extends PureComponent {
                                     required
                                 />
                             </Grid>
+                            <Grid item xs={12}>
+                                <input className='inputfile' id='file' type='file' name='file'/>
+                                <label htmlFor="file">Choose a file</label>
+                            </Grid>
                         </Grid>
                     </form>
-                    <Button onClick={this.handleClick} variant='contained' color='primary'
-                            size='small' className={classes.button}>
-                        Generar reclamo
+                    <Button
+                        onClick={this.handleClick}
+                        type='submit'
+                        fullWidth
+                        variant='contained'
+                        color='primary'
+                        className={classes.submit}
+                    >
+                            Generar reclamo
                     </Button>
                 </div>
             </Container>

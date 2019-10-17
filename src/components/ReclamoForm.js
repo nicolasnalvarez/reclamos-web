@@ -58,7 +58,8 @@ class ReclamoForm extends PureComponent {
             edificioSelected: '',
             unidadSelected: '',
             comentario: '',
-            ubicacion: ''
+            ubicacion: '',
+            imagenes: []
         }
     };
 
@@ -112,7 +113,6 @@ class ReclamoForm extends PureComponent {
             const dni = currentUser.dni;
         }
 
-
         // fetch(`localhost:8080/unidades/personas/${tipoUsuario}/${dni}/edificios/${this.state.edificioSelected.id}`,
         //     {
         //         method: 'GET',
@@ -149,6 +149,27 @@ class ReclamoForm extends PureComponent {
             onChangeValue(value);
     };
 
+    onUploadImage = event => {
+        console.log('image event', event);
+
+        if (event.target && event.target.files) {
+            this.setState({
+                formValues: {
+                    ...this.state.formValues,
+                    imagenes: [
+                        ...this.state.formValues.imagenes,
+                        [
+                            {
+                                path: `C:\\imagenes\\${event.target.files[0].name}`,
+                                tipo: event.target.files[0].type
+                            }
+                        ]
+                    ]
+                }
+            });
+        }
+    };
+
     isValidNumber = number => /^[\d]+$/.test(number);
 
     handleClick = () => {
@@ -158,14 +179,13 @@ class ReclamoForm extends PureComponent {
         }
     };
 
-    altaReclamo  = () =>  {
+    altaReclamo = () =>  {
         const currentUser = this.props.currentUser;
         const formValues = this.state.formValues;
 
-        if (!currentUser) {
-            const tipoUsuario = 1;
-            const dni = '35255211';
-        } else {
+        const tipoUsuario = 1;
+        const dni = '35255211';
+        if (currentUser && currentUser.dni) {
             const tipoUsuario = currentUser.tipoUsuario;
             const dni = currentUser.dni;
         }
@@ -176,22 +196,21 @@ class ReclamoForm extends PureComponent {
             idUnidad: formValues.unidadSelected,
             ubicacion: formValues.ubicacion,
             descripcion: formValues.comentario,
-            documento: dni
+            documento: dni,
+            imagenes: formValues.imagenes
         };
 
-        fetch('http://localhost:8080/auth/register',
+        fetch('http://localhost:8080/reclamos',
             {
                 method: 'POST',
-                body: JSON.stringify(newUser),
+                body: JSON.stringify(newReclamo),
                 headers: {
                     'Content-Type': 'application/json'
                 }
             })
             .then(response => response.json())
             .then(cleanResponse => {
-                if (cleanResponse.status === 201) {
-                    registerUser();
-                }
+
             })
             .catch(error => console.error('Error:', error));
     };
@@ -285,7 +304,7 @@ class ReclamoForm extends PureComponent {
                             </Grid>
                             {
                                 formValues.unidadSelected === '0' &&
-                                <Grid item xs={12}>
+                                <Grid style={{marginTop: '5px'}} item xs={12}>
                                     <TextField
                                         id='ubicacion'
                                         label='Ubicación del hecho'
@@ -316,8 +335,9 @@ class ReclamoForm extends PureComponent {
                                 />
                             </Grid>
                             <Grid item xs={12}>
-                                <input className='inputfile' id='file' type='file' name='file'/>
-                                <label htmlFor="file">Choose a file</label>
+                                <input onChange={this.onUploadImage} className='inputfile' id='file' type='file' name='file'/>
+                                <label htmlFor='file'> Subir una imagen </label>
+                                {formValues.imagenes && formValues.imagenes.length > 0 && <span style={{marginLeft: '5px', color: 'green'}}>Imagen cargada!</span>}
                             </Grid>
                         </Grid>
                     </form>

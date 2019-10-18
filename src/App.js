@@ -63,7 +63,7 @@ const fakeUser = {
 function App({history}) {
     const [session, setSession] = useState(getSessionCookie());
     const [isLoggedIn, setLoggedIn] = useState(!!session.nombre);
-
+    const [loginError, setLoginError] = useState(false);
     const [currentUser, setCurrentUser] = useState(null);
     // useEffect(
     //     () => {
@@ -74,9 +74,9 @@ function App({history}) {
 
     // Funciona como el componentDidMount()
     useEffect(() => {
-        if (session.nombre)
+        if (session.nombre && !currentUser)
             setCurrentUser(session);
-    });
+    }, [session.nombre]);
 
     const registerUser = () => {
         history.push('/login');
@@ -99,6 +99,10 @@ function App({history}) {
                 }
             })
             .then(response => {
+                if (response.status === 500) {
+                    throw new Error('Usuario inválido viejita!');
+                }
+
                 setLoggedIn(true);
                 return response.json();
             })
@@ -106,9 +110,13 @@ function App({history}) {
                 setCurrentUser(cleanResponse);
                 console.log(cleanResponse);
                 // if (rememberMe)
+                // do something
                     setSessionCookie(cleanResponse);
             })
-            .catch(error => console.error('Error:', error));
+            .catch(error => {
+                console.error('Error:', error);
+                setLoginError(true);
+            });
     };
 
     const onUserLogOut = () => {
@@ -144,7 +152,7 @@ function App({history}) {
                             <SignUp registerUser={registerUser}/>
                         </Route>
                         <Route path='/login'>
-                            <Login setSessionCookie={setSessionCookie} onUserLogin={onUserLogin}/>
+                            <Login loginError={loginError} setSessionCookie={setSessionCookie} onUserLogin={onUserLogin}/>
                         </Route>
                         <Route path='/home'>
                             <Home/>

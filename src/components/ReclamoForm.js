@@ -117,10 +117,9 @@ class ReclamoForm extends PureComponent {
     onChangeEdificio = edificioSelected => {
         const currentUser = this.props.currentUser;
 
-        if (!currentUser) {
-            const tipoUsuario = 1;
-            const dni = '35255211';
-        } else {
+        const tipoUsuario = 1;
+        const dni = '35255211';
+        if (currentUser) {
             const tipoUsuario = currentUser.tipoUsuario;
             const dni = currentUser.dni;
         }

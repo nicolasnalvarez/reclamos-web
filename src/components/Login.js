@@ -38,7 +38,7 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export default withRouter(function Login({onUserLogin, history}) {
+export default withRouter(function Login({onUserLogin, history, loginError}) {
     const classes = useStyles();
     const [nombre, setNombre] = useState('');
     const [password, setPassword] = useState('');
@@ -48,8 +48,8 @@ export default withRouter(function Login({onUserLogin, history}) {
 
     const login = event => {
         event.preventDefault();
-        history.push('/home');
         onUserLogin({nombre, password}, saveCookies);
+        history.push('/home');
     };
 
     const saveSessionCookies = rememberMe => {
@@ -107,6 +107,7 @@ export default withRouter(function Login({onUserLogin, history}) {
                     >
                         Loguearse
                     </Button>
+                    {!loginError && <span style={{color: 'red', fontWeight: 'bold'}}>Usuario o contraseña inválidos</span>}
                     <Grid justify='center' container>
                         <Grid item>
                             <Link to='/registro' variant='body2'>

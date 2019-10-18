@@ -74,9 +74,12 @@ function App({history}) {
 
     // Funciona como el componentDidMount()
     useEffect(() => {
-        if (session.nombre)
+        console.log("sesion: " + JSON.stringify(session));
+        if (session.nombre) {
+            console.log("ENTROOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
             setCurrentUser(session);
-    });
+        }
+    }, []);
 
     const registerUser = () => {
         history.push('/login');

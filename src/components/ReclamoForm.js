@@ -83,35 +83,24 @@ class ReclamoForm extends PureComponent {
 
     componentDidMount() {
         const currentUser = this.props.currentUser;
+        console.log("usuario actual: " + JSON.stringify(this.props.currentUser));
 
-        if (!currentUser) {
-            const tipoUsuario = 1;
-            const dni = '35255211';
-        } else {
-            const tipoUsuario = currentUser.tipoUsuario;
-            const dni = currentUser.dni;
-        }
+        const tipoUsuario = currentUser.tipoUsuario;
+        const dni = currentUser.dni;
 
-        // fetch(`localhost:8080/edificios/personas/${tipoUsuario}/${dni}`,
-        //     {
-        //         method: 'GET',
-        //         headers: {
-        //             'Content-Type': 'application/json'
-        //         }
-        //     })
-        //     .then(response => response.json())
-        //     .then(cleanResponse => {
-        //         if (cleanResponse.status === 201) {
-        //             this.setState({edificios: cleanResponse.body});
-        //         }
-        //     })
-        //     .catch(error => console.error('Error:', error));
-        this.setState({
-            edificios: [
-                {id: '5', nombre: 'Edificio Salamandra', direccion: 'Junin 233'},
-                {id: '6', nombre: 'Edificio Las Salinas', direccion: 'Chile 2040'}
-            ]
-        });
+        fetch(`http://localhost:8080/edificios/personas/${tipoUsuario}/${dni}`,
+            {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(cleanResponse => {
+                console.log("edificios: " + cleanResponse);
+                this.setState({edificios: cleanResponse});
+            })
+            .catch(error => console.error('Error:', error));
     }
 
     onChangeEdificio = edificioSelected => {
@@ -164,19 +153,17 @@ class ReclamoForm extends PureComponent {
     onUploadImage = event => {
         console.log('image event', event);
 
+        const imagenesU = this.state.formValues.imagenes;
+        imagenesU.push({
+            path: `C:\\imagenes\\${event.target.files[0].name}`,
+            tipo: event.target.files[0].type
+        });
+
         if (event.target && event.target.files) {
             this.setState({
                 formValues: {
                     ...this.state.formValues,
-                    imagenes: [
-                        ...this.state.formValues.imagenes,
-                        [
-                            {
-                                path: `C:\\imagenes\\${event.target.files[0].name}`,
-                                tipo: event.target.files[0].type
-                            }
-                        ]
-                    ]
+                    imagenes: imagenesU
                 }
             });
         }
@@ -195,12 +182,8 @@ class ReclamoForm extends PureComponent {
         const currentUser = this.props.currentUser;
         const formValues = this.state.formValues;
 
-        const tipoUsuario = 1;
-        const dni = '35255211';
-        if (currentUser && currentUser.dni) {
-            const tipoUsuario = currentUser.tipoUsuario;
-            const dni = currentUser.dni;
-        }
+        const tipoUsuario = currentUser.tipoUsuario;
+        const dni = currentUser.dni;
 
         // event.preventDefault();
         const newReclamo = {
@@ -208,25 +191,26 @@ class ReclamoForm extends PureComponent {
             idUnidad: formValues.unidadSelected,
             ubicacion: formValues.ubicacion,
             descripcion: formValues.comentario,
-            documento: dni,
-            imagenes: formValues.imagenes
+            documento: dni
         };
 
         this.setState({altaReclamoStatusMessage: 'Reclamo generado exitosamente'});
 
-        // fetch('http://localhost:8080/reclamos',
-        //     {
-        //         method: 'POST',
-        //         body: JSON.stringify(newReclamo),
-        //         headers: {
-        //             'Content-Type': 'application/json'
-        //         }
-        //     })
-        //     .then(response => response.json())
-        //     .then(cleanResponse => {
+        console.log(JSON.stringify(newReclamo));
+
+        fetch('http://localhost:8080/reclamos',
+            {
+                method: 'POST',
+                body: JSON.stringify({reclamo: newReclamo, imagenes: formValues.imagenes}),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(cleanResponse => {
                  this.setState({altaReclamoSubmitted: true})
-        //     })
-        //     .catch(error => console.error('Error:', error));
+            })
+            .catch(error => console.error('Error:', error));
     };
 
     render() {

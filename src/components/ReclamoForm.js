@@ -163,19 +163,17 @@ class ReclamoForm extends PureComponent {
     onUploadImage = event => {
         console.log('image event', event);
 
+        const imagenesU = this.state.formValues.imagenes;
+        imagenesU.push({
+            path: `C:\\imagenes\\${event.target.files[0].name}`,
+            tipo: event.target.files[0].type
+        });
+
         if (event.target && event.target.files) {
             this.setState({
                 formValues: {
                     ...this.state.formValues,
-                    imagenes: [
-                        ...this.state.formValues.imagenes,
-                        [
-                            {
-                                path: `C:\\imagenes\\${event.target.files[0].name}`,
-                                tipo: event.target.files[0].type
-                            }
-                        ]
-                    ]
+                    imagenes: imagenesU
                 }
             });
         }

@@ -57,11 +57,12 @@ export default function SignUp({registerUser}) {
             errorHandler(value, errorSetter);
     };
 
-    const handleDniError = (value, errorSetter) => errorSetter(!value || !isValidNumber(value) || !_.inRange(value.length, 7, 9));
+    const handleDniError = (value, errorSetter) => errorSetter(!value || !isValidNumber(value) || !_.inRange(value.length, 7, 16));
     const handlePasswordError = (value, errorSetter) => errorSetter(!value || !isValidPassword(value));
     const handleConfirmPasswordError = (value, errorSetter) => errorSetter(!value || value !== password);
 
-    const isValidNumber = number => /^[\d]+$/.test(number);
+    //const isValidNumber = number => /^[\d]+$/.test(number);
+    const isValidNumber = number => true;
     const isValidPassword = password => /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/.test(password);
 
     const register = () => {

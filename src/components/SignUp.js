@@ -10,7 +10,6 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import * as rp from 'request-promise';
 
 const useStyles = makeStyles(theme => ({
     '@global': {
@@ -37,7 +36,7 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-export default function SignUp({registerUser}) {
+export default function SignUp({registerUser, registerError}) {
     const classes = useStyles();
     const [dniHasError, setDniError] = useState(false);
     const [passwordHasError, setPasswordError] = useState(false);
@@ -77,26 +76,6 @@ export default function SignUp({registerUser}) {
         };
 
         registerUser(newUser);
-
-        // fetch('http://localhost:8080/auth/register',
-        //     {
-        //         method: 'POST',
-        //         body: JSON.stringify(newUser),
-        //         headers: {
-        //             'Content-Type': 'application/json'
-        //         }
-        //     })
-        //     .then(response => {
-        //         console.log('response', response);
-        //         return response.json();
-        //     })
-        //     .then(cleanResponse => {
-        //         console.warn('cleanResponse.status', cleanResponse.status);
-        //         if (cleanResponse.status === 201 || cleanResponse.status === 200) {
-        //             registerUser();
-        //         }
-        //     })
-        //     .catch(error => console.error('Error:', error));
     };
 
     return (
@@ -204,7 +183,7 @@ export default function SignUp({registerUser}) {
                         {/*</Grid>*/}
                     </Grid>
                     <Button
-                        type='submit'
+                        type='button'
                         fullWidth
                         variant='contained'
                         color='primary'
@@ -214,6 +193,7 @@ export default function SignUp({registerUser}) {
                     >
                         Registrarse
                     </Button>
+                    {registerError && <span style={{color: 'red', fontWeight: 'bold'}}>Hubo un error validando el DNI</span>}
                     <Grid container justify='flex-end'>
                         <Grid item>
                             <Link to='/login' variant='body2'>

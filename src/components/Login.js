@@ -40,20 +40,19 @@ const useStyles = makeStyles(theme => ({
 
 export default withRouter(function Login({onUserLogin, history, loginError}) {
     const classes = useStyles();
-    const [nombre, setNombre] = useState('');
-    const [password, setPassword] = useState('');
-    const [saveCookies, setSaveCookies] = useState(false);
+    const [nombre, setNombre] = useState(localStorage['nombre']? localStorage['nombre']:'');
+    const [password, setPassword] = useState(localStorage['password']? localStorage['password']:'');
+    const [saveCredentials, setSaveCredentials] = useState(true);
 
     const handleChange = valueSetter => ({ target: {value} }) => valueSetter(value);
 
     const login = event => {
         event.preventDefault();
-        onUserLogin({nombre, password}, saveCookies);
-        history.push('/home');
+        onUserLogin({nombre, password}, saveCredentials);
     };
 
-    const saveSessionCookies = rememberMe => {
-        setSaveCookies(rememberMe);
+    const rememberMe = ({target: {checked: rememberMe}}) => {
+        setSaveCredentials(rememberMe);
     };
 
     return (
@@ -80,6 +79,7 @@ export default withRouter(function Login({onUserLogin, history, loginError}) {
                         autoComplete='nombre'
                         onChange={handleChange(setNombre)}
                         autoFocus
+                        value={nombre}
                     />
                     <TextField
                         variant='outlined'
@@ -92,9 +92,10 @@ export default withRouter(function Login({onUserLogin, history, loginError}) {
                         id='password'
                         onChange={handleChange(setPassword)}
                         autoComplete='current-password'
+                        value={password}
                     />
                     <FormControlLabel
-                        control={<Checkbox value={saveCookies} onChange={saveSessionCookies} color='primary' />}
+                        control={<Checkbox checked={saveCredentials} onChange={rememberMe} color='primary' />}
                         label='Recordarme'
                     />
                     <Button

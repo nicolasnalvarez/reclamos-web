@@ -10,6 +10,7 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import * as rp from 'request-promise';
 
 const useStyles = makeStyles(theme => ({
     '@global': {
@@ -75,21 +76,27 @@ export default function SignUp({registerUser}) {
           password: password
         };
 
-        fetch('http://localhost:8080/auth/register',
-            {
-                method: 'POST',
-                body: JSON.stringify(newUser),
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            })
-            .then(response => response.json())
-            .then(cleanResponse => {
-                if (cleanResponse.status === 201) {
-                    registerUser();
-                }
-            })
-            .catch(error => console.error('Error:', error));
+        registerUser(newUser);
+
+        // fetch('http://localhost:8080/auth/register',
+        //     {
+        //         method: 'POST',
+        //         body: JSON.stringify(newUser),
+        //         headers: {
+        //             'Content-Type': 'application/json'
+        //         }
+        //     })
+        //     .then(response => {
+        //         console.log('response', response);
+        //         return response.json();
+        //     })
+        //     .then(cleanResponse => {
+        //         console.warn('cleanResponse.status', cleanResponse.status);
+        //         if (cleanResponse.status === 201 || cleanResponse.status === 200) {
+        //             registerUser();
+        //         }
+        //     })
+        //     .catch(error => console.error('Error:', error));
     };
 
     return (

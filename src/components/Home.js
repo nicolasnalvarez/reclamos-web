@@ -20,7 +20,7 @@ const useStyles = makeStyles({
     },
 });
 
-const Home = props => {
+const Home = ({isLoggedIn}) => {
     const classes = useStyles();
 
     return (
@@ -41,14 +41,16 @@ const Home = props => {
                         </Typography>
                     </CardContent>
                 </CardActionArea>
-                <CardActions>
-                    <Button size="small" color="primary">
-                        Generar Reclamo
-                    </Button>
-                    <Button size="small" color="primary">
-                        Mis Reclamos
-                    </Button>
-                </CardActions>
+                { isLoggedIn &&
+                    <CardActions>
+                        <Button size="small" color="primary">
+                            Generar Reclamo
+                        </Button>
+                        <Button size="small" color="primary">
+                            Mis Reclamos
+                        </Button>
+                    </CardActions>
+                }
             </Card>
         </Container>
 )};

@@ -107,7 +107,7 @@ export default withRouter(function Login({onUserLogin, history, loginError}) {
                     >
                         Loguearse
                     </Button>
-                    {!loginError && <span style={{color: 'red', fontWeight: 'bold'}}>Usuario o contraseña inválidos</span>}
+                    {loginError && <span style={{color: 'red', fontWeight: 'bold'}}>Usuario o contraseña inválidos</span>}
                     <Grid justify='center' container>
                         <Grid item>
                             <Link to='/registro' variant='body2'>

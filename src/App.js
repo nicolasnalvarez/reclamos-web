@@ -5,13 +5,14 @@ import Footer from './components/Footer'
 import Reclamos from './components/Reclamos';
 import ReclamoBusqueda from './components/ReclamoBusqueda';
 import Login from './components/Login';
-import {BrowserRouter, Route, Switch} from 'react-router-dom';
+import {Router, Route, Switch} from 'react-router-dom';
 import SignUp from './components/SignUp';
 import Home from "./components/Home";
 import './App.scss';
 import {getSessionCookie, setSessionCookie} from "./utils/CookiesUtils";
 import {SessionContext} from "./utils/Constants";
 import * as Cookies from 'js-cookie';
+import * as rp from "request-promise";
 
 const RECLAMOS = [
     {
@@ -78,8 +79,16 @@ function App({history}) {
             setCurrentUser(session);
     }, [session.nombre]);
 
-    const registerUser = () => {
-        history.push('/login');
+    const onUserRegister = newUser => {
+        // history.push('/login');
+        rp('http://www.google.com')
+            .then(function (htmlString) {
+                console.log('bien con: ' + htmlString);
+
+            })
+            .catch(function (err) {
+                console.log('mal con: ' + err);
+            });
     };
 
     const onUserLogin = (loginData, rememberMe) => {
@@ -135,7 +144,7 @@ function App({history}) {
 
     return (
         <SessionContext.Provider value={session}>
-            <BrowserRouter history={history}>
+            <Router history={history}>
                 <>
                     <Header onUserLogOut={onUserLogOut} isLoggedIn={isLoggedIn} title='Gestión de reclamos'/>
                     <Switch>
@@ -149,13 +158,13 @@ function App({history}) {
                             <ReclamoBusqueda/>
                         </Route>
                         <Route path='/registro'>
-                            <SignUp registerUser={registerUser}/>
+                            <SignUp registerUser={onUserRegister}/>
                         </Route>
                         <Route path='/login'>
                             <Login loginError={loginError} setSessionCookie={setSessionCookie} onUserLogin={onUserLogin}/>
                         </Route>
                         <Route path='/home'>
-                            <Home/>
+                            <Home isLog={isLoggedIn}/>
                         </Route>
                         <Route path='*'>
                             <Home/>
@@ -163,7 +172,7 @@ function App({history}) {
                     </Switch>
                     <Footer/>
                 </>
-            </BrowserRouter>
+            </Router>
         </SessionContext.Provider>
     );
 }

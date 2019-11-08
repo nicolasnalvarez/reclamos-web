@@ -105,6 +105,7 @@ export default withRouter(function Login({onUserLogin, history, loginError}) {
                         color='primary'
                         className={classes.submit}
                         onClick={login}
+                        disabled={!nombre || !password}
                     >
                         Loguearse
                     </Button>

@@ -11,6 +11,7 @@ import Typography from '@material-ui/core/Typography';
 import './ReclamoForm.scss';
 import Chip from '@material-ui/core/Chip';
 import DoneIcon from '@material-ui/icons/Done';
+import * as rp from "request-promise";
 
 const styles = theme => ({
     root: {
@@ -106,33 +107,27 @@ class ReclamoForm extends PureComponent {
     onChangeEdificio = edificioSelected => {
         const currentUser = this.props.currentUser;
 
-        const tipoUsuario = 1;
-        const dni = '35255211';
+        let tipoUsuario = 1;
+        let dni = 'DNI30012288';
         if (currentUser) {
-            const tipoUsuario = currentUser.tipoUsuario;
-            const dni = currentUser.dni;
+            tipoUsuario = currentUser.tipoUsuario;
+            dni = currentUser.dni;
         }
 
-        // fetch(`localhost:8080/unidades/personas/${tipoUsuario}/${dni}/edificios/${this.state.edificioSelected.id}`,
-        //     {
-        //         method: 'GET',
-        //         headers: {
-        //             'Content-Type': 'application/json'
-        //         }
-        //     })
-        //     .then(response => response.json())
-        //     .then(cleanResponse => {
-        //         if (cleanResponse.status === 201) {
-        //             this.setState({edificios: cleanResponse.body});
-        //         }
-        //     })
-        //     .catch(error => console.error('Error:', error));
-
-        this.setState({
-            unidades: [
-                {id: '100', piso: '5', numero: 'A', habitado: false},
-                {id: '101', piso: '2', numero: 'B', habitado: true}
-            ]
+        rp({
+            method: 'GET',
+            uri: `http://localhost:8080/unidades/personas/${tipoUsuario}/${dni}/edificios/${edificioSelected}`,
+            headers: {'content-type': 'application/json'},
+            json: true
+        })
+        .then(response => {
+            console.log('bien con: ' + response);
+            this.setState({unidades: response});
+            // setRegisterError(false);
+            // history.push('/login');
+        })
+        .catch( err => {
+            console.log('mal con: ' + err);
         });
     };
 
@@ -350,7 +345,7 @@ class ReclamoForm extends PureComponent {
                             Generar reclamo
                     </Button>
                     {altaReclamoSubmitted && <Chip
-                        color='primary'
+                        style={{backgroundColor: 'green', color: 'white'}}
                         label={altaReclamoStatusMessage}
                         onClick={this.handleClick}
                         onDoubleClick={this.handleClick}

@@ -45,7 +45,8 @@ function App({history}) {
     useEffect(() => {
         if (session.nombre && !currentUser)
             setCurrentUser(session);
-    }, [session.nombre]);
+    // }, [session.nombre]);
+    }, []);
 
     const onUserRegister = newUser => {
         rp({
@@ -54,25 +55,18 @@ function App({history}) {
             headers: {'content-type': 'application/json'},
             body: JSON.stringify(newUser)
         })
-            .then(function (response) {
-                console.log('bien con: ' + response);
-                setRegisterError(false);
-                history.push('/login');
-            })
-            .catch(function (err) {
-                console.log('mal con: ' + err);
-                setRegisterError(true);
-            });
+        .then(function (response) {
+            console.log('bien con: ' + response);
+            setRegisterError(false);
+            history.push('/login');
+        })
+        .catch(function (err) {
+            console.log('mal con: ' + err);
+            setRegisterError(true);
+        });
     };
 
     const onUserLogin = (loginData, rememberMe) => {
-        // if (rememberMe)
-        //     setSessionCookie({usuario: fakeUser.usuario, email: fakeUser.email, dni: fakeUser.dni, tipoUsuario: 1});
-
-        // setLoggedIn(true);
-        // setCurrentUser(fakeUser);
-
-        // CON SERVER DESCOMENTAR LO SIGUIENTE:
         fetch('http://localhost:8080/auth/login',
             {
                 method: 'POST',
@@ -83,7 +77,7 @@ function App({history}) {
             })
             .then(response => {
                 if (response.status === 500) {
-                    throw new Error('Usuario inválido viejita!');
+                    throw new Error('Usuario inválido!');
                 }
 
                 setLoggedIn(true);
@@ -93,10 +87,8 @@ function App({history}) {
                 setCurrentUser(cleanResponse);
                 setLoginError(false);
                 console.log(cleanResponse);
-                if (rememberMe) {
-                    localStorage.setItem('nombre', loginData.nombre);
-                    localStorage.setItem('password', loginData.password);
-                }
+                localStorage.setItem('nombre', rememberMe? loginData.nombre : '');
+                localStorage.setItem('password', rememberMe? loginData.password : '');
 
                 setSessionCookie(cleanResponse);
                 history.push('/home');
@@ -111,6 +103,7 @@ function App({history}) {
       setLoggedIn(false);
       setCurrentUser({});
       Cookies.remove("session");
+        history.push('/login');
     };
 
     // TODO: agregar currentUser al Context y así evitar pasarlo como prop varias veces
@@ -127,9 +120,14 @@ function App({history}) {
                 <>
                     <Header onUserLogOut={onUserLogOut} isLoggedIn={isLoggedIn} title='Gestión de reclamos'/>
                     <Switch>
-                        <Route path='/reclamo'>
-                            <ReclamoForm currentUser={currentUser}/>
-                        </Route>
+                        {
+                            currentUser &&
+                            <Route
+                                path='/reclamo'
+                                render={props => <ReclamoForm currentUser={currentUser} />}
+                            />
+
+                        }
                         <Route path='/reclamos'>
                             <Reclamos currentUser={currentUser} titulo='RECLAMOS'/>
                         </Route>

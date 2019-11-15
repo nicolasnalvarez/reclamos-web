@@ -29,17 +29,6 @@ const useStyles = makeStyles(theme => ({
 
 const Header = ({title, isLoggedIn, history, onUserLogOut}) => {
     const classes = useStyles();
-    const menuOptions = isLoggedIn
-        ? [
-            {iconName: 'post_add', text: 'Nuevo Reclamo', subText: 'Aquí podrá generar un nuevo reclamo para su unidad o edificio', pathTo: '/reclamo'},
-            {iconName: 'search', text: 'Buscar Reclamo', subText: 'Podrá buscar uno o varios reclamos según cierto criterio', pathTo: '/busquedareclamos'},
-            {iconName: 'list_alt', text: 'Mis Reclamos', subText: 'La lista de los reclamos que fueron generados por usted', pathTo: '/reclamos'}
-        ]
-        :[{iconName: 'search', text: 'Buscar Reclamo', subText: 'Podrá buscar uno o varios reclamos según cierto criterio', pathTo: '/busquedareclamos'}];
-
-    const redirectToHome = () => {
-        history.push('/');
-    };
 
     const checkLogOut = () => {
         if (isLoggedIn) {
@@ -49,18 +38,34 @@ const Header = ({title, isLoggedIn, history, onUserLogOut}) => {
         }
     };
 
+    const menuOptions = isLoggedIn
+        ? [
+            {iconName: 'post_add', text: 'Nuevo Reclamo', subText: 'Aquí podrá generar un nuevo reclamo para su unidad o edificio', pathTo: '/reclamo'},
+            {iconName: 'search', text: 'Buscar Reclamo', subText: 'Podrá buscar uno o varios reclamos según cierto criterio', pathTo: '/busquedareclamos'},
+            {iconName: 'list_alt', text: 'Mis Reclamos', subText: 'La lista de los reclamos que fueron generados por usted', pathTo: '/reclamos'},
+            {iconName: 'exit_to_app', text: 'Logout', subText: 'La lista de los reclamos que fueron generados por usted', pathTo: '/home', onClick: checkLogOut}
+        ]
+        :[
+            {iconName: 'search', text: 'Buscar Reclamo', subText: 'Podrá buscar uno o varios reclamos según cierto criterio', pathTo: '/busquedareclamos'},
+            {iconName: 'open_in_browser', text: 'Login', subText: 'La lista de los reclamos que fueron generados por usted', pathTo: '/login'}
+        ];
+
+    const redirectToHome = () => {
+        history.push('/');
+    };
+
     return (
         <AppBar component='header' position='static' className={classes.root}>
             <Toolbar>
                 <Typography onClick={redirectToHome} variant='h1' className={classes.title}>
                     {title}
                 </Typography>
-                <CustomizedMenus menuOptions={menuOptions}/>
-                <Button onClick={checkLogOut} color='inherit'>
-                    {!isLoggedIn && <Link className={classes.link} to="/login">Log in</Link>}
-                    {isLoggedIn && <span>Log out</span>}
-                    <Icon style={{marginLeft: '3px'}}>{isLoggedIn? 'exit_to_app':'open_in_browser'}</Icon>
-                </Button>
+                <CustomizedMenus menuOptions={menuOptions} checkLogOut={checkLogOut} isLoggedIn={isLoggedIn}/>
+                {/*<Button onClick={checkLogOut} color='inherit'>*/}
+                {/*    {!isLoggedIn && <Link className={classes.link} to="/login">Log in</Link>}*/}
+                {/*    {isLoggedIn && <span>Log out</span>}*/}
+                {/*    <Icon style={{marginLeft: '3px'}}>{isLoggedIn? 'exit_to_app':'open_in_browser'}</Icon>*/}
+                {/*</Button>*/}
             </Toolbar>
         </AppBar>
 )};

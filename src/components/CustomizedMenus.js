@@ -5,8 +5,8 @@ import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import Icon from "@material-ui/core/Icon";
-import {Link} from "react-router-dom";
+import Icon from '@material-ui/core/Icon';
+import {Link} from 'react-router-dom';
 
 const StyledMenu = withStyles({
     paper: {
@@ -42,7 +42,7 @@ const StyledMenuItem = withStyles(theme => ({
     },
 }))(MenuItem);
 
-export default function CustomizedMenus({menuOptions}) {
+export default function CustomizedMenus({menuOptions, checkLogOut, isLoggedIn}) {
     // const renderLink = to => React.useMemo(
     //     () =>
     //         React.forwardRef((itemProps, ref) => (
@@ -70,10 +70,16 @@ export default function CustomizedMenus({menuOptions}) {
     return (
         <div>
             <Button
-                aria-controls="customized-menu"
-                aria-haspopup="true"
-                variant="contained"
-                style={{opacity: '0.7', backgroundColor: 'black', color: '#fff', marginRight: '10px', width: '160px', boxShadow: '0px 1px 5px 0px rgba(249, 249, 249, 0.2), 0px 2px 2px 0px rgba(255, 253, 253, 0.14), 0px 3px 1px -2px rgba(255, 255, 255, 0.12)'}}
+                aria-controls='customized-menu'
+                aria-haspopup='true'
+                variant='contained'
+                style={{
+                    opacity: '0.7',
+                    backgroundColor: 'black',
+                    color: '#fff',
+                    marginRight: '10px',
+                    boxShadow: '0px 1px 5px 0px rgba(249, 249, 249, 0.2), 0px 2px 2px 0px rgba(255, 253, 253, 0.14), 0px 3px 1px -2px rgba(255, 255, 255, 0.12)'
+                }}
                 onClick={handleClick}
                 // onMouseEnter={event => {
                 //     const currentEvent = {currentTarget: event.currentTarget};
@@ -81,10 +87,11 @@ export default function CustomizedMenus({menuOptions}) {
                 //     setTimeout(event => handleClick(currentEvent), 300);
                 // }}
             >
-                <span style={{opacity: '1'}}>Menu</span>
+                {/*<span style={{opacity: '1'}}>Menu</span>*/}
+                <Icon style={{opacity: '1'}}>dehaze</Icon>
             </Button>
             <StyledMenu
-                id="customized-menu"
+                id='customized-menu'
                 anchorEl={anchorEl}
                 keepMounted
                 open={Boolean(anchorEl)}
@@ -100,6 +107,7 @@ export default function CustomizedMenus({menuOptions}) {
                                     ))
                         }
                         style={{whiteSpace: 'normal'}}
+                        onClick={menuOption.onClick}
                     >
                         <ListItemIcon>
                             <Icon>{menuOption.iconName}</Icon>

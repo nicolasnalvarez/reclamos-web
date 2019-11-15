@@ -17,16 +17,6 @@ import * as rp from "request-promise";
 //ESTADOS
 //nuevo, abierto, enProceso, desestimado, anulado, terminado
 
-const fakeUser = {
-    firstName: 'dario',
-    lastName: 'test',
-    dni: '35221329',
-    email: 'dar@ovo.com',
-    password: 'pass',
-    tipoUsuario: 1,
-    usuario: 'dlipartiti'
-};
-
 function App({history}) {
     const [session, setSession] = useState(getSessionCookie());
     const [isLoggedIn, setLoggedIn] = useState(!!session.nombre);
@@ -45,7 +35,6 @@ function App({history}) {
     useEffect(() => {
         if (session.nombre && !currentUser)
             setCurrentUser(session);
-    // }, [session.nombre]);
     }, []);
 
     const onUserRegister = newUser => {
@@ -140,11 +129,8 @@ function App({history}) {
                         <Route path='/login'>
                             <Login loginError={loginError} setSessionCookie={setSessionCookie} onUserLogin={onUserLogin}/>
                         </Route>
-                        <Route path='/home'>
-                            <Home isLog={isLoggedIn}/>
-                        </Route>
-                        <Route path='*'>
-                            <Home/>
+                        <Route path={['*', '/home']}>
+                            <Home isLoggedIn={isLoggedIn}/>
                         </Route>
                     </Switch>
                     <Footer/>

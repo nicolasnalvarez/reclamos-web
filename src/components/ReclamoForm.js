@@ -186,10 +186,13 @@ class ReclamoForm extends PureComponent {
             })
             .then(response => response.json())
             .then(cleanResponse => {
+                if (cleanResponse.error || cleanResponse.status === 500)
+                    throw new Error(cleanResponse.message);
+
                 this.setState({altaReclamoSubmitted: true});
-                // setTimeout(() => this.setState({altaReclamoSubmitted: false}), 5000);
+                setTimeout(() => this.setState({altaReclamoSubmitted: false}), 5000);
             })
-            .catch(error => console.error('Error:', error));
+            .catch(error => console.error('Error:', error.message));
     };
 
     render() {

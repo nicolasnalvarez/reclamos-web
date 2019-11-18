@@ -3,11 +3,10 @@ import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
-import PropTypes from 'prop-types';
 import CustomizedMenus from './CustomizedMenus';
-import {Link, withRouter} from "react-router-dom";
-import Icon from "@material-ui/core/Icon";
+import {withRouter} from "react-router-dom";
+import Avatar from "@material-ui/core/Avatar";
+import { deepOrange, deepPurple } from '@material-ui/core/colors';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -24,15 +23,19 @@ const useStyles = makeStyles(theme => ({
     link: {
         textDecoration: 'none',
         color: 'inherit'
+    },
+    orangeAvatar: {
+        margin: 10,
+        color: '#fff',
+        backgroundColor: deepOrange[500]
     }
 }));
 
-const Header = ({title, isLoggedIn, history, onUserLogOut}) => {
+const Header = ({title, isLoggedIn, history, onUserLogOut, currentUser}) => {
     const classes = useStyles();
 
     const checkLogOut = () => {
         if (isLoggedIn) {
-            // event.preventDefault();
             history.push('/home');
             onUserLogOut();
         }
@@ -61,11 +64,7 @@ const Header = ({title, isLoggedIn, history, onUserLogOut}) => {
                     {title}
                 </Typography>
                 <CustomizedMenus menuOptions={menuOptions} checkLogOut={checkLogOut} isLoggedIn={isLoggedIn}/>
-                {/*<Button onClick={checkLogOut} color='inherit'>*/}
-                {/*    {!isLoggedIn && <Link className={classes.link} to="/login">Log in</Link>}*/}
-                {/*    {isLoggedIn && <span>Log out</span>}*/}
-                {/*    <Icon style={{marginLeft: '3px'}}>{isLoggedIn? 'exit_to_app':'open_in_browser'}</Icon>*/}
-                {/*</Button>*/}
+                {currentUser && <Avatar className={classes.orangeAvatar}>{currentUser.nombre[0].toUpperCase()}</Avatar>}
             </Toolbar>
         </AppBar>
 )};

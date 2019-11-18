@@ -10,7 +10,6 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import Typography from '@material-ui/core/Typography';
 import './ReclamoForm.scss';
 import Chip from '@material-ui/core/Chip';
-import DoneIcon from '@material-ui/icons/Done';
 import * as rp from "request-promise";
 
 const styles = theme => ({
@@ -68,19 +67,7 @@ class ReclamoForm extends PureComponent {
         altaReclamoSubmitted: false
     };
 
-    // this.id = id;
-    // this.piso = piso;
-    // this.numero = numero;
-    // this.habitado = habitado;
-    // this.edificio = edificio;
-
-    handleDelete = () => {
-        alert('You clicked the delete icon.');
-    };
-
-    handleClick = () => {
-        alert('You clicked the Chip.');
-    };
+    hideReclamoSubmitted = () => this.setState({altaReclamoSubmitted: false});
 
     componentDidMount() {
         const currentUser = this.props.currentUser;
@@ -179,7 +166,6 @@ class ReclamoForm extends PureComponent {
         const tipoUsuario = currentUser.tipoUsuario;
         const dni = currentUser.dni;
 
-        // event.preventDefault();
         const newReclamo = {
             idEdificio: formValues.edificioSelected,
             idUnidad: formValues.unidadSelected,
@@ -189,8 +175,6 @@ class ReclamoForm extends PureComponent {
         };
 
         this.setState({altaReclamoStatusMessage: 'Reclamo generado exitosamente'});
-
-        console.log(JSON.stringify(newReclamo));
 
         fetch('http://localhost:8080/reclamos',
             {
@@ -202,7 +186,8 @@ class ReclamoForm extends PureComponent {
             })
             .then(response => response.json())
             .then(cleanResponse => {
-                 this.setState({altaReclamoSubmitted: true})
+                this.setState({altaReclamoSubmitted: true});
+                // setTimeout(() => this.setState({altaReclamoSubmitted: false}), 5000);
             })
             .catch(error => console.error('Error:', error));
     };
@@ -344,12 +329,12 @@ class ReclamoForm extends PureComponent {
                     >
                             Generar reclamo
                     </Button>
-                    {altaReclamoSubmitted && <Chip
+                    {(altaReclamoSubmitted) && <Chip
+                        className='successfullyCreated'
                         style={{backgroundColor: 'green', color: 'white'}}
                         label={altaReclamoStatusMessage}
-                        onClick={this.handleClick}
-                        onDoubleClick={this.handleClick}
-                        deleteIcon={<DoneIcon />}
+                        onClick={this.hideReclamoSubmitted}
+                        onDoubleClick={this.hideReclamoSubmitted}
                     />}
                 </div>
             </Container>

@@ -43,16 +43,6 @@ const StyledMenuItem = withStyles(theme => ({
 }))(MenuItem);
 
 export default function CustomizedMenus({menuOptions, checkLogOut, isLoggedIn}) {
-    // const renderLink = to => React.useMemo(
-    //     () =>
-    //         React.forwardRef((itemProps, ref) => (
-    //             // With react-router-dom@^6.0.0 use `ref` instead of `innerRef`
-    //             // See https://github.com/ReactTraining/react-router/issues/6056
-    //             <Link to={to} {...itemProps} ref={ref} />
-    //         )),
-    //     [to],
-    // );
-
     const renderLink = to => {
         return <Link to={to}/>
     };
@@ -93,7 +83,7 @@ export default function CustomizedMenus({menuOptions, checkLogOut, isLoggedIn}) 
             <StyledMenu
                 id='customized-menu'
                 anchorEl={anchorEl}
-                keepMounted
+                keepMounted={false}
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
             >
@@ -107,7 +97,11 @@ export default function CustomizedMenus({menuOptions, checkLogOut, isLoggedIn}) 
                                     ))
                         }
                         style={{whiteSpace: 'normal'}}
-                        onClick={menuOption.onClick}
+                        onClick={() => {
+                            if (menuOption.onClick)
+                                menuOption.onClick();
+                            handleClose();
+                        }}
                     >
                         <ListItemIcon>
                             <Icon>{menuOption.iconName}</Icon>

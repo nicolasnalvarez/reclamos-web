@@ -18,7 +18,7 @@ import * as rp from "request-promise";
 //nuevo, abierto, enProceso, desestimado, anulado, terminado
 
 function App({history}) {
-    const [session, setSession] = useState(getSessionCookie());
+    const [session] = useState(getSessionCookie());
     const [isLoggedIn, setLoggedIn] = useState(!!session.nombre);
     const [loginError, setLoginError] = useState(false);
     const [registerError, setRegisterError] = useState(false);
@@ -101,13 +101,12 @@ function App({history}) {
     // TODO: menú con submenú por búsqueda de reclamos con diferentes criterios
     // TODO: agregar perfil del usuario y pantalla de administrador
     // TODO: hashear password para la cookie o generar un JWT o no guardar la password directamente
-    // TODO: cambiar menú por un ícono de hamburguesa
 
     return (
         <SessionContext.Provider value={session}>
             <Router history={history}>
                 <>
-                    <Header onUserLogOut={onUserLogOut} isLoggedIn={isLoggedIn} title='Gestión de reclamos'/>
+                    <Header onUserLogOut={onUserLogOut} currentUser={currentUser} isLoggedIn={isLoggedIn} title='Gestión de reclamos'/>
                     <Switch>
                         {
                             currentUser &&
@@ -115,11 +114,13 @@ function App({history}) {
                                 path='/reclamo'
                                 render={props => <ReclamoForm currentUser={currentUser} />}
                             />
-
                         }
-                        <Route path='/reclamos'>
-                            <Reclamos currentUser={currentUser} titulo='RECLAMOS'/>
-                        </Route>
+                        {
+                            currentUser &&
+                            <Route path='/reclamos'>
+                                <Reclamos currentUser={currentUser} titulo='LISTA DE RECLAMOS'/>
+                            </Route>
+                        }
                         <Route path='/busquedareclamos'>
                             <ReclamoBusqueda/>
                         </Route>

@@ -37,7 +37,7 @@ const styles = theme => ({
     },
 });
 
-class Reclamos extends PureComponent {
+class ListaReclamos extends PureComponent {
     state = {
         selected: 'Dueño',
         reclamos: [],
@@ -84,4 +84,4 @@ class Reclamos extends PureComponent {
     }
 }
 
-export default withStyles(styles)(Reclamos);
+export default withStyles(styles)(ListaReclamos);

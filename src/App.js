@@ -2,17 +2,20 @@ import React, {useEffect, useState} from 'react';
 import ReclamoForm from './components/ReclamoForm';
 import Header from './components/Header';
 import Footer from './components/Footer'
-import Reclamos from './components/Reclamos';
+import Reclamos from './components/ListaReclamos';
 import ReclamoBusqueda from './components/ReclamoBusqueda';
 import Login from './components/Login';
 import {Router, Route, Switch} from 'react-router-dom';
 import SignUp from './components/SignUp';
-import Home from "./components/Home";
+import Home from './components/Home';
 import './App.scss';
-import {getSessionCookie, setSessionCookie} from "./utils/CookiesUtils";
-import {SessionContext} from "./utils/Constants";
+import {getSessionCookie, setSessionCookie} from './utils/CookiesUtils';
+import {SessionContext} from './utils/Constants';
 import * as Cookies from 'js-cookie';
-import * as rp from "request-promise";
+import * as rp from 'request-promise';
+import Loading from './components/Loading';
+import Loadable from 'react-loadable';
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 //ESTADOS
 //nuevo, abierto, enProceso, desestimado, anulado, terminado
@@ -24,18 +27,18 @@ function App({history}) {
     const [registerError, setRegisterError] = useState(false);
     const [currentUser, setCurrentUser] = useState(null);
 
-    // useEffect(
-    //     () => {
-    //         setSession(getSessionCookie());
-    //     },
-    //     [session]
-    // );
-
     // Funciona como el componentDidMount()
     useEffect(() => {
         if (session.nombre && !currentUser)
             setCurrentUser(session);
     }, []);
+
+    const LoadableListaReclamos = Loadable({
+        loader: () => import('./components/ListaReclamos'),
+        loading: Loading,
+        delay: 300,
+        timeout: 15000
+    });
 
     const onUserRegister = newUser => {
         rp({
@@ -91,12 +94,11 @@ function App({history}) {
     const onUserLogOut = () => {
       setLoggedIn(false);
       setCurrentUser({});
-      Cookies.remove("session");
+      Cookies.remove('session');
         history.push('/login');
     };
 
     // TODO: agregar currentUser al Context y así evitar pasarlo como prop varias veces
-    // TODO: agregar Loading components
     // TODO: sumar más validaciones en formularios
     // TODO: menú con submenú por búsqueda de reclamos con diferentes criterios
     // TODO: agregar perfil del usuario y pantalla de administrador
@@ -118,7 +120,7 @@ function App({history}) {
                         {
                             currentUser &&
                             <Route path='/reclamos'>
-                                <Reclamos currentUser={currentUser} titulo='LISTA DE RECLAMOS'/>
+                                <LoadableListaReclamos currentUser={currentUser} titulo='LISTA DE RECLAMOS'/>
                             </Route>
                         }
                         <Route path='/busquedareclamos'>

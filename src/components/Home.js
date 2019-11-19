@@ -13,11 +13,10 @@ import Logo from '../images/reclamo_sistema_2.jpg';
 
 const useStyles = makeStyles({
     card: {
-        maxWidth: 545,
+        maxWidth: 545
     },
     media: {
         height: 240,
-
     },
 });
 
@@ -27,7 +26,7 @@ const Home = ({isLoggedIn}) => {
     return (
         <Container component='main' className='homeContainer'>
             <Card className={classes.card}>
-                <CardActionArea>
+                <CardActionArea className='defaultPointer'>
                     <CardMedia
                         className={classes.media}
                         image={Logo}

@@ -7,4 +7,13 @@ main {
     align-items: flex-start;
     justify-content: flex-start;
   }
+  &.topCenterContent {
+    align-items: flex-start;
+    justify-content: center;
+  }
+  .spinner {
+    margin: 20px;
+    align-self: center;
+  }
 }
+

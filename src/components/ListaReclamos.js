@@ -1,5 +1,4 @@
 import React, {PureComponent} from 'react';
-import PropTypes from 'prop-types';
 import {withStyles} from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import List from '@material-ui/core/List';
@@ -7,7 +6,9 @@ import ListItem from '@material-ui/core/ListItem';
 import Divider from '@material-ui/core/Divider';
 import Typography from '@material-ui/core/Typography';
 import Reclamo from "./Reclamo";
+import CircularProgress from "@material-ui/core/CircularProgress";
 import './Reclamos.scss';
+import '../App.scss';
 
 const styles = theme => ({
     root: {
@@ -50,8 +51,9 @@ class ListaReclamos extends PureComponent {
               if (reclamos.error || reclamos.status === 500)
                   throw new Error(reclamos.message);
 
-              console.log(reclamos);
-              this.setState({ reclamos })
+              // console.log(reclamos);
+              // setTimeout(() => this.setState({ reclamos }), 3000);
+
           })
           .catch(err => {
               console.log(`Problemas al buscar la lista de reclamos: ${err.message}`);
@@ -63,21 +65,24 @@ class ListaReclamos extends PureComponent {
         const {reclamos} = this.state;
 
         return (
-            <Container component='main' title='Lista de Reclamos' maxWidth='lg'>
+            <Container className='topCenterContent' component='main' title='Lista de Reclamos' maxWidth='lg'>
                 <div className={classes.paper}>
-                    <Typography align={'center'} component='h1' variant='h5'>
+                    <Typography align='center' component='h1' variant='h5'>
                         {titulo}
                     </Typography>
-                    <List dense className={classes.root}>
-                        {
-                            reclamos.map(({id, documento, idEdificio, idUnidad, ubicacion, descripcion, estado}) =>
-                                <ListItem key={id} alignItems={6} title='Reclamos'>
-                                    <Reclamo cardWidth={600} raised={true} dataReclamo={{id, documento, idEdificio, idUnidad, ubicacion, descripcion, estado}}/>
-                                    <Divider variant='inset' component='li' />
-                                </ListItem>
-                            )
-                        }
-                    </List>
+                    {   reclamos && reclamos.length > 0 &&
+                        <List dense className={classes.root}>
+                            {
+                                reclamos.map(({id, documento, idEdificio, idUnidad, ubicacion, descripcion, estado}) =>
+                                    <ListItem key={`${id}-${idEdificio}-${idUnidad}`} alignItems={6} title='Reclamos'>
+                                        <Reclamo cardWidth={600} raised={true} dataReclamo={{id, documento, idEdificio, idUnidad, ubicacion, descripcion, estado}}/>
+                                        <Divider variant='inset' component='li' />
+                                    </ListItem>
+                                )
+                            }
+                        </List>
+                    }
+                    <CircularProgress className='spinner' size={70} thickness={2}/>
                 </div>
             </Container>
         );

@@ -1,21 +1,19 @@
 import React, {PureComponent} from 'react';
 import {withStyles} from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import Divider from '@material-ui/core/Divider';
 import Typography from '@material-ui/core/Typography';
 import Reclamo from "./Reclamo";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import './Reclamos.scss';
 import '../App.scss';
+import Grid from "@material-ui/core/Grid";
 
 const styles = theme => ({
-    root: {
-        display: 'flex',
-        flexWrap: 'wrap',
-        flexDirection: 'column'
-    },
+    // root: {
+    //     display: 'flex',
+    //     flexWrap: 'wrap',
+    //     flexDirection: 'column'
+    // },
     formControl: {
         marginTop: 20,
         minWidth: 150
@@ -42,6 +40,7 @@ class ListaReclamos extends PureComponent {
     state = {
         selected: 'Dueño',
         reclamos: [],
+        isLoading: true
     };
 
     componentDidMount() {
@@ -51,38 +50,37 @@ class ListaReclamos extends PureComponent {
               if (reclamos.error || reclamos.status === 500)
                   throw new Error(reclamos.message);
 
-              // console.log(reclamos);
-              // setTimeout(() => this.setState({ reclamos }), 3000);
-
+              setTimeout(() => this.setState({ reclamos, isLoading: false }), 1500);
           })
           .catch(err => {
               console.log(`Problemas al buscar la lista de reclamos: ${err.message}`);
+              this.setState({ isLoading: false });
           })
       }
 
     render() {
         const {titulo, classes} = this.props;
-        const {reclamos} = this.state;
+        const {reclamos, isLoading} = this.state;
+        console.log(`LISTA DE RECLAMOS: ${JSON.stringify(reclamos)}`);
 
         return (
-            <Container className='topCenterContent' component='main' title='Lista de Reclamos' maxWidth='lg'>
+            <Container className='topCenterContent' component='main' title='Lista de Reclamos' maxWidth='md'>
+                {isLoading && <CircularProgress className='spinner' size={50} thickness={2}/>}
                 <div className={classes.paper}>
-                    <Typography align='center' component='h1' variant='h5'>
+                    <Typography align='center' component='h2' variant='h2'>
                         {titulo}
                     </Typography>
                     {   reclamos && reclamos.length > 0 &&
-                        <List dense className={classes.root}>
+                        <Grid container spacing={2} className='reclamosList'>
                             {
-                                reclamos.map(({id, documento, idEdificio, idUnidad, ubicacion, descripcion, estado}) =>
-                                    <ListItem key={`${id}-${idEdificio}-${idUnidad}`} alignItems={6} title='Reclamos'>
-                                        <Reclamo cardWidth={600} raised={true} dataReclamo={{id, documento, idEdificio, idUnidad, ubicacion, descripcion, estado}}/>
-                                        <Divider variant='inset' component='li' />
-                                    </ListItem>
+                                reclamos.map(dataReclamo =>
+                                    <Grid item xs={12} sm={6} md={6} key={`${dataReclamo.id}-${dataReclamo.idEdificio}-${dataReclamo.idUnidad}`} title='Reclamos'>
+                                        <Reclamo dataReclamo={dataReclamo}/>
+                                    </Grid>
                                 )
                             }
-                        </List>
+                        </Grid>
                     }
-                    <CircularProgress className='spinner' size={70} thickness={2}/>
                 </div>
             </Container>
         );

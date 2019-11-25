@@ -9,7 +9,7 @@ import CardContent from '@material-ui/core/CardContent';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import './Home.scss';
-import Logo from '../images/reclamo_sistema_2.jpg';
+import Hero from '../images/reclamo_sistema_2.jpg';
 
 const useStyles = makeStyles({
     card: {
@@ -29,7 +29,7 @@ const Home = ({isLoggedIn}) => {
                 <CardActionArea className='defaultPointer'>
                     <CardMedia
                         className={classes.media}
-                        image={Logo}
+                        image={Hero}
                         title='Sistema de generación de reclamos'
                     />
                     <CardContent>

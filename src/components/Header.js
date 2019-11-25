@@ -6,7 +6,8 @@ import Typography from '@material-ui/core/Typography';
 import CustomizedMenus from './CustomizedMenus';
 import {withRouter} from "react-router-dom";
 import Avatar from "@material-ui/core/Avatar";
-import { deepOrange, deepPurple } from '@material-ui/core/colors';
+import { deepOrange } from '@material-ui/core/colors';
+import Logo from '../images/logo.png';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -60,6 +61,7 @@ const Header = ({title, isLoggedIn, history, onUserLogOut, currentUser}) => {
     return (
         <AppBar component='header' position='static' className={classes.root}>
             <Toolbar>
+                <img src={Logo} height={50} alt='Logo'/>
                 <Typography onClick={redirectToHome} variant='h1' className={classes.title}>
                     {title}
                 </Typography>

@@ -10,19 +10,18 @@ import Reclamo from "./Reclamo";
 const styles = theme => ({
     root: {
         display: 'flex',
-        flexWrap: 'wrap',
         flexDirection: 'column'
     },
     formControl: {
-        marginTop: 10,
-        minWidth: 350
+        margin: 10,
+        minWidth: 500
     },
     button: {
         marginTop: theme.spacing(2)
     },
     formSubcontainer: {
         padding: theme.spacing(2),
-        marginTop: theme.spacing(2)
+        margin: theme.spacing(2)
     },
     reclamoContainer: {
         marginTop: theme.spacing(5)
@@ -60,17 +59,6 @@ class ReclamoBusqueda extends PureComponent {
 
     handleClick = () => {
         if (!this.state.hasError && !!this.state.idReclamoBuscado)
-            // this.setState({
-            //     reclamoActual: {
-            //         id: '01401958',
-            //         documento: '40019302',
-            //         idEdificio: '2',
-            //         idUnidad: '4',
-            //         ubicacion: "Griveo 2030, CABA",
-            //         descripcion: 'Descripción del reclamo 3 recontra super mega archi larga con un montón de cosas adentro para ver como se ve acá, porque si se ve feo o rompe cagamos fuego',
-            //         estado: 'enProceso'
-            //     }
-            // });
             this.buscarReclamo();
     };
 
@@ -79,7 +67,7 @@ class ReclamoBusqueda extends PureComponent {
         const {idReclamoBuscado, hasError, reclamoActual} = this.state;
 
         return (
-            <Container component='main' maxWidth='md'>
+            <Container component='main' maxWidth='lg'>
                 <Paper elevation={4} className={classes.formSubcontainer}>
                     <form>
                         <TextField

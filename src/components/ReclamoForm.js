@@ -9,7 +9,7 @@ import Grid from '@material-ui/core/Grid';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Typography from '@material-ui/core/Typography';
 import Chip from '@material-ui/core/Chip';
-import * as rp from "request-promise";
+import * as rp from 'request-promise';
 import Firebase from '../utils/Firebase.js';
 import firebase from 'firebase';
 import { uploadImage, downloadImage } from '../utils/UploadImage';
@@ -91,10 +91,14 @@ class ReclamoForm extends PureComponent {
             })
             .then(response => response.json())
             .then(cleanResponse => {
-                console.log("edificios: " + cleanResponse);
+                if (cleanResponse.status === 500) throw new Error(cleanResponse.message);
+                console.log("edificios: " + JSON.stringify(cleanResponse));
                 this.setState({ edificios: cleanResponse, waiting: false });
             })
-            .catch(error => console.error('Error:', error));
+            .catch(error => {
+                console.error('Error:', error)
+                this.setState({ waiting: false });
+            });
     }
 
     onChangeEdificio = edificioSelected => {
@@ -240,7 +244,7 @@ class ReclamoForm extends PureComponent {
         const {formValues, hasError, edificios, unidades, altaReclamoSubmitted, altaReclamoStatusMessage, waiting} = this.state;
 
         // Buscar una mejor manera
-        const canSubmit = formValues.edificioSelected && formValues.unidadSelected && formValues.comentario;
+        const canSubmit = formValues.edificioSelected && formValues.unidadSelected && formValues.comentario && !waiting;
 
         return (
             <Container component='main' maxWidth='xs' className='altaReclamoContainer'>
@@ -260,17 +264,12 @@ class ReclamoForm extends PureComponent {
                                     fullWidth
                                     value={formValues.edificioSelected}
                                     onChange={this.handleChange('edificioSelected', this.onChangeEdificio)}
-                                    // SelectProps={{
-                                    //     MenuProps: {
-                                    //         className: classes.menu,
-                                    //     },
-                                    // }}
                                     helperText='Seleccione un edificio'
                                     autoFocus
                                     required
                                 >
                                     {
-                                        edificios.map(edificio => <MenuItem key={edificio.id} value={edificio.id}>{edificio.nombre}</MenuItem>)
+                                        (!edificios && []) || edificios.map(edificio => <MenuItem key={edificio.id} value={edificio.id}>{edificio.nombre}</MenuItem>)
                                     }
                                 </TextField>
                             </Grid>
@@ -284,11 +283,6 @@ class ReclamoForm extends PureComponent {
                                     value={formValues.unidadSelected}
                                     onChange={this.handleChange('unidadSelected')}
                                     disabled={!formValues.edificioSelected}
-                                    // SelectProps={{
-                                    //     MenuProps: {
-                                    //         className: classes.menu,
-                                    //     },
-                                    // }}
                                     helperText='Seleccione una unidad'
                                     autoFocus
                                     required

@@ -44,7 +44,7 @@ class ListaReclamos extends PureComponent {
     };
 
     componentDidMount() {
-        fetch('http://localhost:8080/reclamos/all/'+this.props.currentUser.dni)
+        fetch(`http://localhost:8080/reclamos/all/${this.props.currentUser.dni}`)
           .then(response => response.json())
           .then(reclamos => {
               if (reclamos.error || reclamos.status === 500)
@@ -59,9 +59,10 @@ class ListaReclamos extends PureComponent {
       }
 
     render() {
-        const {titulo, classes} = this.props;
+        //currentUser.dni
+        //currentUser.tipoUsuario
+        const {titulo, classes, currentUser: {tipoUsuario}} = this.props;
         const {reclamos, isLoading} = this.state;
-        console.log(`LISTA DE RECLAMOS: ${JSON.stringify(reclamos)}`);
 
         return (
             <Container className='topCenterContent' component='main' title='Lista de Reclamos' maxWidth='md'>
@@ -75,7 +76,7 @@ class ListaReclamos extends PureComponent {
                             {
                                 reclamos.map(dataReclamo =>
                                     <Grid item xs={12} sm={6} md={6} key={`${dataReclamo.id}-${dataReclamo.idEdificio}-${dataReclamo.idUnidad}`} title='Reclamos'>
-                                        <Reclamo dataReclamo={dataReclamo}/>
+                                        <Reclamo dataReclamo={dataReclamo} esAdmin={tipoUsuario === 3}/>
                                     </Grid>
                                 )
                             }

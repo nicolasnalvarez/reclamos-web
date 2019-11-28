@@ -11,6 +11,17 @@ import CardHeader from "@material-ui/core/CardHeader";
 import Avatar from "@material-ui/core/Avatar";
 import AssignmentIcon from '@material-ui/icons/Assignment';
 import { green, pink, blue } from '@material-ui/core/colors';
+import * as rp from 'request-promise';
+import Dialog from '@material-ui/core/Dialog';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+import ListItemAvatar from '@material-ui/core/ListItemAvatar';
+import PersonIcon from '@material-ui/icons/Person';
+import * as PropTypes from 'prop-types';
+
+const ESTADOS = ['abierto', 'enProceso', 'desestimado', 'anulado', 'terminado'];
 
 const useStyles = makeStyles(theme => ({
     card: {
@@ -38,19 +49,80 @@ const useStyles = makeStyles(theme => ({
     },
     blue: {
         backgroundColor: blue[500]
+    },
+    avatar: {
+        backgroundColor: blue[100],
+        color: blue[600],
     }
 }));
 
-const Reclamo = ({dataReclamo, raised = false, cardWidth}) => {
+function SimpleDialog(props) {
     const classes = useStyles();
-    const isEmptyOrNull =  !dataReclamo || Object.keys(dataReclamo).size === 0;
-    const randomNum = Math.floor(Math.random()*3) + 1;
+    const { onClose, selectedValue, open } = props;
 
-    const changeStatus = () => {
-
+    const handleClose = () => {
+        onClose(selectedValue);
     };
 
-    // {"id":1002,"documento":"DNI30108780","idEdificio":1,"nombreEdificio":"SLS Puerto Madero","direccionEdificio":"Mogliani 425","idUnidad":6,"numeroUnidad":"1","pisoUnidad":"10","ubicacion":"","descripcion":"Un nuevo reclamo.","estado":"nuevo"}
+    const handleListItemClick = value => {
+        onClose(value);
+    };
+
+    return (
+        <Dialog onClose={handleClose} aria-labelledby='simple-dialog-title' open={open}>
+            <DialogTitle id='simple-dialog-title'>Por favor, seleccione el nuevo estado</DialogTitle>
+            <List>
+                {ESTADOS.map(estado => (
+                    <ListItem style={{ backgroundColor: estado === selectedValue? '#00d4ff':'inherit' }} button onClick={() => handleListItemClick(estado)} key={estado}>
+                        <ListItemAvatar>
+                            <Avatar className={classes.avatar}>
+                                <PersonIcon />
+                            </Avatar>
+                        </ListItemAvatar>
+                        <ListItemText primary={_.startCase(estado)} />
+                    </ListItem>
+                ))}
+            </List>
+        </Dialog>
+    );
+}
+
+SimpleDialog.propTypes = {
+    onClose: PropTypes.func.isRequired,
+    open: PropTypes.bool.isRequired,
+    selectedValue: PropTypes.string.isRequired,
+};
+
+const Reclamo = ({dataReclamo, raised = false, cardWidth, esAdmin = false}) => {
+    const classes = useStyles();
+    // const isEmptyOrNull =  !dataReclamo || Object.keys(dataReclamo).size === 0;
+    const randomNum = Math.floor(Math.random() * 3) + 1;
+    const [open, setOpen] = React.useState(false);
+    const [statusSelected, setStatusSelected] = React.useState(ESTADOS[0]);
+
+    const changeStatus = () => {
+        setOpen(true);
+    };
+
+    const handleClose = value => {
+        setOpen(false);
+        setStatusSelected(value);
+
+        // rp({
+        //     method: 'GET',
+        //     uri: `http://localhost:8080/unidades/personas/${tipoUsuario}/${dni}/edificios/${edificioSelected}`,
+        //     headers: {'content-type': 'application/json'},
+        //     json: true
+        // })
+        //     .then(response => {
+        //         this.setState({ unidades: response, waiting: false });
+        //         // setRegisterError(false);
+        //     })
+        //     .catch( err => {
+        //         console.log('mal con: ' + err);
+        //         this.setState({ waiting: false });
+        //     })
+    };
 
     return (
         <Card raised={raised} style={{width: cardWidth? `${cardWidth}px` : 'inherit'}} className={classes.card}>
@@ -69,9 +141,6 @@ const Reclamo = ({dataReclamo, raised = false, cardWidth}) => {
                 title="Image title"
             />
             <CardContent className={classes.cardContent}>
-                {/*<Typography style={{color: 'blue'}} gutterBottom>*/}
-                {/*    <strong>Estado: </strong>{_.startCase(dataReclamo.estado)}*/}
-                {/*</Typography>*/}
                 <Typography className={classes.title} gutterBottom>
                     <strong>Edificio:</strong> {dataReclamo.idEdificio} - {dataReclamo.nombreEdificio} - {dataReclamo.direccionEdificio}
                 </Typography>
@@ -81,10 +150,11 @@ const Reclamo = ({dataReclamo, raised = false, cardWidth}) => {
                 <Typography className={classes.title} gutterBottom>
                     <strong>Descripción:</strong><br/> {dataReclamo.descripcion}
                 </Typography>
+                <SimpleDialog selectedValue={statusSelected} open={open} onClose={handleClose} />
             </CardContent>
-            <CardActions>
+            {!esAdmin && <CardActions>
                 <Button onClick={changeStatus} variant='contained' color='primary' size='small'>Cambiar estado</Button>
-            </CardActions>
+            </CardActions>}
         </Card>
     )};
 

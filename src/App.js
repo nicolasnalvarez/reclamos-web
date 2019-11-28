@@ -3,9 +3,9 @@ import ReclamoForm from './components/ReclamoForm';
 import Header from './components/Header';
 import Footer from './components/Footer'
 import ReclamoBusqueda from './components/ReclamoBusqueda';
-import Login from './components/Login';
+import Login from './components/authentication/Login';
 import {Router, Route, Switch} from 'react-router-dom';
-import SignUp from './components/SignUp';
+import SignUp from './components/authentication/SignUp';
 import Home from './components/Home';
 import './App.scss';
 import {getSessionCookie, setSessionCookie} from './utils/CookiesUtils';

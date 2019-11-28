@@ -1,35 +1,44 @@
-.inputfile {
-  width: 0.1px;
-  height: 0.1px;
-  opacity: 0;
-  overflow: hidden;
-  position: absolute;
-  z-index: -1;
-}
+.altaReclamoContainer {
+  .inputfile {
+    width: 0.1px;
+    height: 0.1px;
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+    z-index: -1;
+  }
+  .inputfile + label {
+    font-size: 1.25em;
+    font-weight: 700;
+    color: white;
+    //background-color: black;
+    //background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(9,9,121,1) 35%, rgba(0,212,255,1) 100%);
+    background: linear-gradient(180deg, rgba(0,0,255,1) 0%, rgba(9,9,0,1) 35%, rgba(2,0,36,1) 100%);
+    display: inline-block;
+    padding: 10px;
 
-.inputfile + label {
-  font-size: 1.25em;
-  font-weight: 700;
-  color: white;
-  background-color: black;
-  display: inline-block;
-  padding: 10px;
-}
+    width: 180px;
+    text-align: center;
+    background-size: 1px 200px;
+  }
+  .inputfile:focus + label,
+  .inputfile + label:hover {
+    //background-color: red;
+    background: linear-gradient(180deg, rgba(0,212,255,1) 0%, rgba(9,9,121,1) 35%, rgba(2,0,36,1) 100%);
+    //background-position: 180px;
+  }
+  .inputfile + label {
+    cursor: pointer;
+    transition: 300ms all ease-in-out;
+  }
+  .inputfile:focus + label {
+    outline: 1px dotted #000;
+    outline: -webkit-focus-ring-color auto 5px;
+  }
+  .successfullyCreated {
 
-.inputfile:focus + label,
-.inputfile + label:hover {
-  background-color: red;
-}
-
-.inputfile + label {
-  cursor: pointer;
-}
-
-.inputfile:focus + label {
-  outline: 1px dotted #000;
-  outline: -webkit-focus-ring-color auto 5px;
-}
-
-.successfullyCreated {
-
+  }
+  .bottom {
+    position: relative;
+  }
 }

@@ -2,7 +2,6 @@ import React, {useEffect, useState} from 'react';
 import ReclamoForm from './components/ReclamoForm';
 import Header from './components/Header';
 import Footer from './components/Footer'
-import Reclamos from './components/ListaReclamos';
 import ReclamoBusqueda from './components/ReclamoBusqueda';
 import Login from './components/Login';
 import {Router, Route, Switch} from 'react-router-dom';
@@ -15,7 +14,6 @@ import * as Cookies from 'js-cookie';
 import * as rp from 'request-promise';
 import Loading from './components/Loading';
 import Loadable from 'react-loadable';
-import CircularProgress from "@material-ui/core/CircularProgress";
 
 //ESTADOS
 //nuevo, abierto, enProceso, desestimado, anulado, terminado

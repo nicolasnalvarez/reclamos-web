@@ -8,9 +8,13 @@ import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Typography from '@material-ui/core/Typography';
-import './ReclamoForm.scss';
 import Chip from '@material-ui/core/Chip';
 import * as rp from "request-promise";
+import Firebase from '../utils/Firebase.js';
+import firebase from 'firebase';
+import { uploadImage, downloadImage } from '../utils/UploadImage';
+import './ReclamoForm.scss';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const styles = theme => ({
     root: {
@@ -64,17 +68,19 @@ class ReclamoForm extends PureComponent {
             imagenes: []
         },
         altaReclamoStatusMessage: 'Reclamo generado exitosamente',
-        altaReclamoSubmitted: false
+        altaReclamoSubmitted: false,
+        waiting: false
     };
 
     hideReclamoSubmitted = () => this.setState({altaReclamoSubmitted: false});
 
     componentDidMount() {
+        new Firebase();
         const currentUser = this.props.currentUser;
-        console.log("usuario actual: " + JSON.stringify(this.props.currentUser));
 
         const tipoUsuario = currentUser.tipoUsuario;
         const dni = currentUser.dni;
+        this.setState({ waiting: true });
 
         fetch(`http://localhost:8080/edificios/personas/${tipoUsuario}/${dni}`,
             {
@@ -86,7 +92,7 @@ class ReclamoForm extends PureComponent {
             .then(response => response.json())
             .then(cleanResponse => {
                 console.log("edificios: " + cleanResponse);
-                this.setState({edificios: cleanResponse});
+                this.setState({ edificios: cleanResponse, waiting: false });
             })
             .catch(error => console.error('Error:', error));
     }
@@ -101,21 +107,20 @@ class ReclamoForm extends PureComponent {
             dni = currentUser.dni;
         }
 
-        rp({
+        this.setState({ waiting: true });
+        setTimeout(() => rp({
             method: 'GET',
             uri: `http://localhost:8080/unidades/personas/${tipoUsuario}/${dni}/edificios/${edificioSelected}`,
             headers: {'content-type': 'application/json'},
             json: true
         })
-        .then(response => {
-            console.log('bien con: ' + response);
-            this.setState({unidades: response});
-            // setRegisterError(false);
-            // history.push('/login');
-        })
-        .catch( err => {
-            console.log('mal con: ' + err);
-        });
+            .then(response => {
+                this.setState({ unidades: response, waiting: false });
+                // setRegisterError(false);
+            })
+            .catch( err => {
+                console.log('mal con: ' + err);
+            }), 1500);
     };
 
     handleChange = (name, onChangeValue) => ({ target: {value} }) => {
@@ -131,23 +136,60 @@ class ReclamoForm extends PureComponent {
             onChangeValue(value);
     };
 
-    onUploadImage = event => {
-        console.log('image event', event);
+    onUploadImage = async ({target}) => {
+        let imagenesU = [];
 
-        const imagenesU = this.state.formValues.imagenes;
-        imagenesU.push({
-            path: `C:\\imagenes\\${event.target.files[0].name}`,
-            tipo: event.target.files[0].type
-        });
+        firebase.app();
+        const storageRef = firebase.storage().ref('images');
+        this.setState({ waiting: true });
 
-        if (event.target && event.target.files) {
+        for (let file of target.files) {
+            const imageName = file.name + ' - ' + Date.now();
+            const imageRef = storageRef.child(imageName);
+
+            await imageRef.put(file);
+            const imagePath = await downloadImage(storageRef, imageName);
+
+            imagenesU.push({
+                path: imagePath,
+                tipo: file.type
+            });
+        }
+
+        if (target.files) {
             this.setState({
                 formValues: {
                     ...this.state.formValues,
-                    imagenes: imagenesU
-                }
+                    imagenes: [...this.state.formValues.imagenes, ...imagenesU]
+                },
+                waiting: false
             });
         }
+            // uploadTask.on(
+            //     'state_changed',
+            //     snapshot => {
+            //         const progress = Math.round(
+            //             (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+            //         );
+            //
+            //         // this.setState({ progress });
+            //     },
+            //     error => {
+            //         // Error function ...
+            //         console.log('Error subiendo imagen: ' + error);
+            //     },
+            //     () => {
+            //         // complete function ...
+            //         firebase.storage
+            //             .ref('images')
+            //             .child(file.name)
+            //             .getDownloadURL()
+            //             .then(url => {
+            //                 this.setState({ url });
+            //             });
+            //     }
+            // );
+        // });
     };
 
     isValidNumber = number => /^[\d]+$/.test(number);
@@ -162,8 +204,6 @@ class ReclamoForm extends PureComponent {
     altaReclamo = () =>  {
         const currentUser = this.props.currentUser;
         const formValues = this.state.formValues;
-
-        const tipoUsuario = currentUser.tipoUsuario;
         const dni = currentUser.dni;
 
         const newReclamo = {
@@ -197,13 +237,13 @@ class ReclamoForm extends PureComponent {
 
     render() {
         const {classes} = this.props;
-        const {formValues, hasError, edificios, unidades, altaReclamoSubmitted, altaReclamoStatusMessage} = this.state;
+        const {formValues, hasError, edificios, unidades, altaReclamoSubmitted, altaReclamoStatusMessage, waiting} = this.state;
 
         // Buscar una mejor manera
         const canSubmit = formValues.edificioSelected && formValues.unidadSelected && formValues.comentario;
 
         return (
-            <Container component='main' maxWidth='xs'>
+            <Container component='main' maxWidth='xs' className='altaReclamoContainer'>
                 <CssBaseline/>
                 <div className={classes.paper}>
                     <Typography component='h1' variant='h5'>
@@ -212,23 +252,6 @@ class ReclamoForm extends PureComponent {
                     <form className={classes.form} onSubmit={() => {return false;}}>
                         <Grid container spacing={2}>
                             <Grid item xs={12} sm={6}>
-                                {/*<FormGroup className={classes.root} aria-autocomplete='none'>*/}
-                                {/*    <FormControl className={classes.formControl} error={hasError}>*/}
-                                {/*        <InputLabel htmlFor='edificios'>Edificios</InputLabel>*/}
-                                {/*        <Select*/}
-                                {/*            name='edificios'*/}
-                                {/*            id='edificios'*/}
-                                {/*            value={formValues.edificioSelected}*/}
-                                {/*            onChange={this.handleChange('edificioSelected', this.onChangeEdificio)}*/}
-                                {/*            input={<Input id='edificio'/>}*/}
-                                {/*        >*/}
-                                {/*            {*/}
-                                {/*                edificios.map(edificio => <MenuItem key={edificio.id} value='duenio'>{edificio.nombre}</MenuItem>)*/}
-                                {/*            }*/}
-                                {/*        </Select>*/}
-                                {/*        {hasError && <FormHelperText>Campo requerido!</FormHelperText>}*/}
-                                {/*    </FormControl>*/}
-                                {/*</FormGroup>*/}
                                 <TextField
                                     id='edificios'
                                     select
@@ -315,9 +338,9 @@ class ReclamoForm extends PureComponent {
                                 />
                             </Grid>
                             <Grid item xs={12}>
-                                <input onChange={this.onUploadImage} className='inputfile' id='file' type='file' name='file'/>
+                                <input onChange={this.onUploadImage} className='inputfile' id='file' type='file' name='file' multiple={true}/>
                                 <label htmlFor='file'> Subir una imagen </label>
-                                {formValues.imagenes && formValues.imagenes.length > 0 && <span style={{marginLeft: '5px', color: 'green'}}>Imagen cargada!</span>}
+                                {formValues.imagenes && formValues.imagenes.length > 0 && <span style={{marginLeft: '5px', color: 'green'}}>Imágenes cargadas!</span>}
                             </Grid>
                         </Grid>
                     </form>
@@ -332,6 +355,7 @@ class ReclamoForm extends PureComponent {
                     >
                             Generar reclamo
                     </Button>
+                    {waiting && <CircularProgress className='spinner bottom' size={50} thickness={2}/>}
                     {(altaReclamoSubmitted) && <Chip
                         className='successfullyCreated'
                         style={{backgroundColor: 'green', color: 'white'}}

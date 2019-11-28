@@ -2,11 +2,11 @@ import React, {PureComponent} from 'react';
 import {withStyles} from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
-import Reclamo from "./Reclamo";
-import CircularProgress from "@material-ui/core/CircularProgress";
+import Reclamo from './Reclamo';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import './Reclamos.scss';
 import '../App.scss';
-import Grid from "@material-ui/core/Grid";
+import Grid from '@material-ui/core/Grid';
 
 const styles = theme => ({
     // root: {
